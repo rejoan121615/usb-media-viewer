@@ -56,12 +56,13 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
         }}
       >
         {/* top searchbar  */}
         <Searchbar />
-        {children}
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );
