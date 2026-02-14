@@ -9,13 +9,8 @@ import {
   InputBase,
   Box,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
-  Search as SearchIcon,
-  Directions as DirectionsIcon,
-  Clear as ClearIcon,
-} from "@mui/icons-material";
+import { MdClear, MdSearch } from 'react-icons/md'
+
 
 const Searchbar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -58,7 +53,7 @@ const Searchbar = () => {
           }}
         >
           <IconButton sx={{ p: "10px" }} aria-label="search" onClick={handleSearch}>
-            <SearchIcon />
+            <MdSearch />
           </IconButton>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
@@ -73,12 +68,11 @@ const Searchbar = () => {
               aria-label="clear"
               onClick={handleClearSearch}
             >
-              <ClearIcon />
+              <MdClear />
             </IconButton>
           )}
         </Paper>
       </Toolbar>
-
       <Divider />
     </>
   );

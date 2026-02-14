@@ -15,24 +15,10 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Home as HomeIcon,
-  People as PeopleIcon,
-  Settings as SettingsIcon,
-  ChevronLeft as ChevronLeftIcon,
-} from "@mui/icons-material";
 import Logo from "@/public/logo.jpg";
 import Navigation from "./Navigation";
 import Searchbar from "./Searchbar";
 
-const drawerWidth = 240;
-
-const navigationItems = [
-  { title: "Home", icon: HomeIcon, path: "/home" },
-  { title: "Users", icon: PeopleIcon, path: "/users" },
-  { title: "Settings", icon: SettingsIcon, path: "/settings" },
-];
 
 interface SidebarLayoutProps {
   children: React.ReactNode;

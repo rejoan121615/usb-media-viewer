@@ -13,19 +13,18 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import {
-  Home as HomeIcon,
-  People as PeopleIcon,
-  Settings as SettingsIcon,
-} from "@mui/icons-material";
 import Logo from "@/public/logo.jpg";
+
+import { BiSolidVideos } from "react-icons/bi";
+import { IoDocumentsSharp, IoImages } from "react-icons/io5";
+
 
 const drawerWidth = 240;
 
 const navigationItems = [
-  { title: "Home", icon: HomeIcon, path: "/home" },
-  { title: "Users", icon: PeopleIcon, path: "/users" },
-  { title: "Settings", icon: SettingsIcon, path: "/settings" },
+  { title: "Videos", icon: <BiSolidVideos size={20} />, path: "/videos" },
+  { title: "Gallery", icon: <IoImages size={18} />, path: "/gallery" },
+  { title: "Documents", icon: <IoDocumentsSharp size={20} />, path: "/documents" },
 ];
 
 const Navigation: React.FC = () => {
@@ -89,13 +88,13 @@ const Navigation: React.FC = () => {
                         color: "#fff",
                       },
                     },
-                    "& .MuiSvgIcon-root": {
+                    "& .MuiListItemIcon-root": {
                       color: isActive ? "#fff" : "inherit",
                     },
                   }}
                 >
                   <ListItemIcon>
-                    <Icon color={isActive ? "primary" : "inherit"} />
+                    {item.icon}
                   </ListItemIcon>
                   <ListItemText primary={item.title} />
                 </ListItemButton>

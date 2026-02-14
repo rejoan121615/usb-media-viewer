@@ -1,7 +1,7 @@
 import React from "react";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import { SidebarLayout } from "@/components/Sidebar";
+import { SidebarLayout } from "@/src/components/Sidebar";
 import Home from "./page/Home";
 
 // Create MUI theme
