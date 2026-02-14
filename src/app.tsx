@@ -1,6 +1,12 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import Home from "./page/Home";
+import Layout from "./Layout";
 
 const root = createRoot(document.getElementById("root")!);
-root.render(<Home />);
+
+root.render(
+  <React.StrictMode>
+    <Layout />
+  </React.StrictMode>,
+);
