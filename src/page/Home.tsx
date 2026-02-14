@@ -1,14 +1,21 @@
 import React from 'react';
-import { SidebarLayout } from '@/components/SidebarLayout';
+import { Typography, Paper, Box } from '@mui/material';
 
 const Home = () => {
   return (
-    <SidebarLayout>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Welcome to My App</h1>
-        <p>Hello Mohd Rejoan! This is your home page with a sidebar.</p>
-      </div>
-    </SidebarLayout>
+    <Box>
+      <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+        Welcome to My App
+      </Typography>
+      <Paper elevation={2} sx={{ p: 3, mt: 2 }}>
+        <Typography variant="body1" paragraph>
+          Hello Mohd Rejoan! This is your home page with a Material-UI sidebar.
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Navigate using the sidebar menu to explore different sections of the app.
+        </Typography>
+      </Paper>
+    </Box>
   );
 };
 

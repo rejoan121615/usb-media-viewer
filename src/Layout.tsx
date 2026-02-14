@@ -1,19 +1,54 @@
 import React from "react";
-import { SidebarLayout } from "@/components/SidebarLayout";
-import { HashRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { SidebarLayout } from "@/components/Sidebar";
+import Home from "./page/Home";
+
+// Create MUI theme
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#2d65e8',
+    },
+  },
+});
 
 const Layout = () => {
   return (
-    <HashRouter>
-      <SidebarLayout>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<div>Home page</div>} />
-          <Route path="/users" element={<div>Users page</div>} />
-          <Route path="/settings" element={<div>Settings page</div>} />
-        </Routes>
-      </SidebarLayout>
-    </HashRouter>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <HashRouter>
+        <SidebarLayout>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Home />} />
+            <Route 
+              path="/users" 
+              element={
+                <div>
+                  <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                    Users Page
+                  </h1>
+                  <p>Manage your users here.</p>
+                </div>
+              } 
+            />
+            <Route 
+              path="/settings" 
+              element={
+                <div>
+                  <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                    Settings Page
+                  </h1>
+                  <p>Configure your application settings.</p>
+                </div>
+              } 
+            />
+          </Routes>
+        </SidebarLayout>
+      </HashRouter>
+    </ThemeProvider>
   );
 };
 

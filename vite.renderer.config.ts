@@ -3,10 +3,10 @@ import path from "path";
 
 // https://vitejs.dev/config
 export default defineConfig(async () => {
-  const tailwindcss = await import("@tailwindcss/vite");
+  // const tailwindcss = await import("@tailwindcss/vite");
   
   return {
-    plugins: [tailwindcss.default()],
+    // plugins: [tailwindcss.default()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),
