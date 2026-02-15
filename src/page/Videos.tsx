@@ -5,6 +5,7 @@ import {
   Grid
 } from '@mui/material';
 import VideoCard from '@/src/components/VideoCard';
+import { VideoFile, VideoTree } from '../types/main.types';
 
 // Sample video data
 const videoData = [
@@ -59,18 +60,26 @@ const videoData = [
 ];
 
 const Videos = () => {
+  const [videos, setVideos] = useState<{ videoTree: VideoTree[]; videoList: VideoFile[] } | null>(null);
+  // const [videoList, setVideoList] = useState<VideoFile[]>([]);
 
   useEffect(() => {
-    window.storageApi.getVideoTree().then((response) => {
-      console.log('Video tree data:', response);
-      // You can set this data to state and use it to render your video cards
+    window.storageApi.videoData().then((response) => {
+      const { data , success, message } = response;
+      if (success && data) {
+        console.log('Video tree data:', data);
+        setVideos(data);
+        // setVideoList(data.videoList);
+      } else {
+        console.log(message);
+      }
     }).catch((error) => {
       console.error('Error fetching video tree:', error);
     });
   }, []);
 
-  const handleVideoClick = (videoId: number) => {
-    console.log('Playing video:', videoId);
+  const handleVideoClick = () => {
+    console.log('Playing video:');
     // Add your video play logic here
   };
 
@@ -81,8 +90,8 @@ const Videos = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {videoData.map((video, index) => (
-          <VideoCard handleVideoClick={() => handleVideoClick(video.id)} video={video} key={index} />
+        {videos?.videoList.map((video, index) => (
+          <VideoCard handleVideoClick={() => handleVideoClick()} video={video} key={index} />
         ))}
       </Grid>
     </Box>

@@ -16,7 +16,7 @@ const VideoCard = ({
   handleVideoClick,
 }: {
   video: any;
-  handleVideoClick: (id: number) => void;
+  handleVideoClick: () => void;
 }) => {
   return (
     <Grid size={4} key={video.id}>
@@ -33,7 +33,7 @@ const VideoCard = ({
           },
         }}
       >
-        <CardActionArea onClick={() => handleVideoClick(video.id)}>
+        <CardActionArea onClick={() => handleVideoClick()}>
           <Box sx={{ position: "relative" }}>
             <CardMedia
               component="img"
@@ -107,4 +107,3 @@ const VideoCard = ({
 
 export default VideoCard;
 
-// You must pass `video` and `handleVideoClick` as props for this component to work properly.

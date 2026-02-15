@@ -1,8 +1,8 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { ApiResponse, VideoChapter } from '../types/main.types';
+import { VideoApiRes, VideoTree } from '../types/main.types';
 
-export async function ReadVideoFiles() : Promise<ApiResponse> {
+export async function ReadVideoFiles() : Promise<VideoApiRes> {
     try {
         const USBPath = process.cwd();
         const videoFilesPath = path.join(USBPath, '..','data','videos');
@@ -12,7 +12,7 @@ export async function ReadVideoFiles() : Promise<ApiResponse> {
            return {
                success: false,
                message: 'Video files path does not exist',
-               data: []
+               data: null
            }
         }        
 
@@ -22,11 +22,12 @@ export async function ReadVideoFiles() : Promise<ApiResponse> {
             return {
                 success: false,
                 message: 'No video files found in the directory',
-                data: []
+                data: null
             }
         }
 
-        const videoTree : VideoChapter[] = chapterStructure.map(folderName => {
+        // get list of video files in each chapter folder and create video tree objects 
+        const videoTree : VideoTree[] = chapterStructure.map(folderName => {
             const videoFiles = fs.readdirSync(path.join(videoFilesPath, folderName));
             const videoFileObjects = videoFiles.map((video) => {
                 return {
@@ -41,18 +42,25 @@ export async function ReadVideoFiles() : Promise<ApiResponse> {
             }
         });
 
-        console.log("Video folders found:", videoTree);
+        // get all the videos as an array of video file objects
+        const allVideos = videoTree.reduce((acc: any[], folder) => {
+            return [...acc, ...folder.VideoFiles]
+        }, []);
+
 
         return {
             success: true,
             message: 'Video files found',
-            data: videoTree
+            data: {
+                videoTree,
+                videoList: allVideos
+            }
         };
     } catch (error) {
         return {
             success: false,
             message: 'An error occurred while reading video files',
-            data: []
+            data: null
         }
     }
 }

@@ -3,15 +3,18 @@ export type VideoFile = {
     VideoUrl: string
 }
 
-export type VideoChapter = {
+export type VideoTree = {
     FolderName: string,
     VideoFiles: VideoFile[]
 }
 
-export type ApiResponse = {
+export type VideoApiRes = {
     success: boolean
     message: string
-    data: VideoChapter[]
+    data: {
+        videoTree: VideoTree[]
+        videoList: VideoFile[]
+    } | null
 }
 
 export type IPCTypes = 'video-tree';

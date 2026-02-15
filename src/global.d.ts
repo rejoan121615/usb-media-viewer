@@ -1,4 +1,4 @@
-import type { ApiResponse } from "./types/main.types";
+import type { VideoApiRes } from "./types/main.types";
 
 declare module '*.css';
 
@@ -36,7 +36,7 @@ declare module '*.webp' {
 declare global {
   interface Window {
     storageApi: {
-      getVideoTree: () => Promise<ApiResponse>;
+      videoData: () => Promise<VideoApiRes>;
     };
   }
 }
