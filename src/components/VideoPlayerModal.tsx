@@ -17,10 +17,16 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (open && videoRef.current) {
-      videoRef.current.play();
+    if (open && videoRef.current && video) {
+      videoRef.current.load();
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.error('Error playing video:', error);
+        });
+      }
     }
-  }, [open]);
+  }, [open, video]);
 
   const handleClose = () => {
     if (videoRef.current) {
@@ -98,6 +104,15 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
             ref={videoRef}
             controls
             autoPlay
+            preload="auto"
+            src={video.streamUrl}
+            onError={(e) => {
+              console.error('Video error:', e);
+              console.error('Video source:', video.streamUrl);
+            }}
+            onLoadedData={() => {
+              console.log('Video loaded successfully');
+            }}
             style={{
               maxWidth: "95%",
               maxHeight: "95%",
@@ -106,7 +121,6 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
               animation: "scaleIn 0.4s ease-out",
             }}
           >
-            <source src={video.streamUrl} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         ) : null}

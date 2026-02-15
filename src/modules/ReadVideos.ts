@@ -1,8 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { VideoApiRes, VideoTree } from '../types/main.types';
-import { lookup } from 'mime-types'
-import { net } from 'electron'
 
 
 const USBPath = process.cwd();
@@ -38,7 +36,7 @@ export async function ReadVideoFiles() : Promise<VideoApiRes> {
                 return {
                     title: video,
                     videoPath: path.join(videoFolderPath, folderName, video),
-                    streamUrl: `media://${folderName}/${video}`
+                    streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`
                 }
             }).filter(video => video.title.endsWith('.mp4') ? true : false);
 
@@ -79,26 +77,29 @@ export async function streamVideo(request: Request) {
 
     // Security: Only allow access within the video folder
     if (!filePath.startsWith(videoFolderPath)) {
+      console.error('Security error: File path outside video folder');
       return new Response('Not found', { status: 404 });
     }
 
     if (!fs.existsSync(filePath)) {
+      console.error('File not found:', filePath);
       return new Response('Not found', { status: 404 });
     }
 
     try {
-      // Stream the file using fs-extra's createReadStream
-      const videoStream = fs.createReadStream(filePath);
-      const mimeType = lookup(filePath) || 'application/octet-stream';
+      // Read the file as a buffer
+      const videoBuffer = await fs.readFile(filePath);
 
-      return new Response(videoStream as any, {
+      return new Response(videoBuffer, {
         status: 200,
         headers: {
-          'Content-Type': mimeType,
+          'Content-Type': 'video/mp4',
+          'Content-Length': videoBuffer.length.toString(),
           'Accept-Ranges': 'bytes'
         }
       });
     } catch (error) {
+      console.error('Error streaming video:', error);
       return new Response('Failed to stream video', { status: 500 });
     }
 }

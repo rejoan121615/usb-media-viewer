@@ -1,10 +1,8 @@
 import { app, BrowserWindow, ipcMain, protocol, } from 'electron';
-import fs from 'fs-extra';
 import path from 'path';
 import started from 'electron-squirrel-startup';
 import { ReadVideoFiles, streamVideo } from './modules/ReadVideos';
 import { IPCTypes } from './types/main.types';
-import { lookup } from 'mime-types';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
