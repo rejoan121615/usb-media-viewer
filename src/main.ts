@@ -1,8 +1,10 @@
 import { app, BrowserWindow, ipcMain, protocol, } from 'electron';
-import path from 'node:path';
+import fs from 'fs-extra';
+import path from 'path';
 import started from 'electron-squirrel-startup';
-import { ReadVideoFiles } from './modules/ReadVideos';
+import { ReadVideoFiles, streamVideo } from './modules/ReadVideos';
 import { IPCTypes } from './types/main.types';
+import { lookup } from 'mime-types';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -60,14 +62,9 @@ app.on('activate', () => {
 // ReadVideoFiles();
 ipcMain.handle('video-tree' as IPCTypes, ReadVideoFiles);
 
-
 // register protocol handler for video files 
 app.whenReady().then(() => {
-  protocol.handle('media', (request) => {
-
-
-    return new Response('not found', { status: 404});
-  });
+  protocol.handle('media', streamVideo);
 }).catch((error) => {
   console.error('Error registering protocol handler:', error);
 });

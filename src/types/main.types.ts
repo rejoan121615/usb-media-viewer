@@ -1,11 +1,12 @@
 export type VideoFile = {
-    Title: string
-    VideoUrl: string
+    title: string
+    videoPath: string
+    streamUrl: string
 }
 
 export type VideoTree = {
-    FolderName: string,
-    VideoFiles: VideoFile[]
+    folderName: string,
+    videoFiles: VideoFile[]
 }
 
 export type VideoApiRes = {

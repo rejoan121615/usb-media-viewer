@@ -57,8 +57,7 @@ const Videos = () => {
       <VideoPlayerModal
         open={modalOpen}
         onClose={handleCloseModal}
-        videoUrl={selectedVideo?.VideoUrl || '/sample.mp4'}
-        videoTitle={selectedVideo?.Title}
+        video={selectedVideo as VideoFile}
       />
     </Box>
   );
