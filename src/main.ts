@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, } from 'electron';
+import { app, BrowserWindow, ipcMain, protocol, } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { ReadVideoFiles } from './modules/ReadVideos';
@@ -59,3 +59,15 @@ app.on('activate', () => {
 // ipcMain.handle('read-video-files', ReadVideoFiles);
 // ReadVideoFiles();
 ipcMain.handle('video-tree' as IPCTypes, ReadVideoFiles);
+
+
+// register protocol handler for video files 
+app.whenReady().then(() => {
+  protocol.handle('media', (request) => {
+
+
+    return new Response('not found', { status: 404});
+  });
+}).catch((error) => {
+  console.error('Error registering protocol handler:', error);
+});

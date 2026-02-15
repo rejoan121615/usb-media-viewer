@@ -10,7 +10,6 @@
     "sourceMap": true,
     "outDir": "dist",
     "moduleResolution": "bundler",
-    "resolveJsonModule": true,
     "paths": {
       "@/*" : ["./*"]
     }
