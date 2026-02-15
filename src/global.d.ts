@@ -1,3 +1,5 @@
+import type { ApiResponse } from "./types/main.types";
+
 declare module '*.css';
 
 // Image imports
@@ -29,4 +31,12 @@ declare module '*.gif' {
 declare module '*.webp' {
   const value: string;
   export default value;
+}
+
+declare global {
+  interface Window {
+    storageApi: {
+      getVideoTree: () => Promise<ApiResponse>;
+    };
+  }
 }

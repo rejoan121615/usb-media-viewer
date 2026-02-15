@@ -13,7 +13,7 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import Logo from "@/public/logo.jpg";
+// import Logo from "../../public/logo.jpg";
 
 import { BiSolidVideos } from "react-icons/bi";
 import { IoDocumentsSharp, IoImages } from "react-icons/io5";
@@ -51,7 +51,7 @@ const Navigation: React.FC = () => {
       <Toolbar sx={{ height: "70px" }}>
         <Stack component={"div"} direction={"row"} alignItems={"center"}>
           <img
-            src={Logo}
+            src="/logo.jpg"
             alt="Logo"
             style={{ width: "50px", height: "auto" }}
           />

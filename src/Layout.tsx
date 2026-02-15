@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { SidebarLayout } from "@/src/components/Sidebar";
-import Home from "./page/Home";
+import Videos from "./page/Videos";
 
 // Create MUI theme
 const theme = createTheme({
@@ -21,27 +21,27 @@ const Layout = () => {
       <HashRouter>
         <SidebarLayout>
           <Routes>
-            <Route path="/" element={<Navigate to="/home" replace />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Navigate to="/videos" replace />} />
+            <Route path="/videos" element={<Videos />} />
             <Route 
-              path="/users" 
+              path="/gallery" 
               element={
                 <div>
                   <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
-                    Users Page
+                    Gallery Page
                   </h1>
-                  <p>Manage your users here.</p>
+                  <p>Browse your images here.</p>
                 </div>
               } 
             />
             <Route 
-              path="/settings" 
+              path="/documents" 
               element={
                 <div>
                   <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
-                    Settings Page
+                    Documents Page
                   </h1>
-                  <p>Configure your application settings.</p>
+                  <p>Manage your documents here.</p>
                 </div>
               } 
             />
