@@ -90,3 +90,7 @@ typings/
 
 # Electron-Forge
 out/
+
+
+# ignore sample media files 
+*.mp4
