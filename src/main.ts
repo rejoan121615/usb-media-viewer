@@ -80,54 +80,7 @@ protocol.registerSchemesAsPrivileged([
 app
   .whenReady()
   .then(() => {
-    protocol.handle("media", async (request) => {
-      const USBPath = process.cwd();
-      const videoFolderPath = path.join(USBPath, "..", "data", "videos");
-      const filePath = decodeURIComponent(request.url.replace("media://", ""));
-      const fullPath = path.join(videoFolderPath, filePath);
-
-      // Check if file exists
-      if (!fs.existsSync(fullPath)) {
-        return new Response("File not found", { status: 404 });
-      }
-
-      const stat = fs.statSync(fullPath);
-      const fileSize = stat.size;
-      const range = request.headers.get("range");
-
-      if (range) {
-        // Parse Range header, e.g. "bytes=12345-"
-        const match = range.match(/bytes=(\d+)-(\d*)/);
-        if (match) {
-          const start = parseInt(match[1], 10);
-          const end = match[2] ? parseInt(match[2], 10) : fileSize - 1;
-          const chunkSize = end - start + 1;
-
-          const fileStream = fs.createReadStream(fullPath, { start, end });
-
-          return new Response(fileStream as any, {
-            status: 206,
-            headers: {
-              "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-              "Accept-Ranges": "bytes",
-              "Content-Length": chunkSize.toString(),
-              "Content-Type": "video/mp4", // Adjust if you support other formats
-            },
-          });
-        }
-      }
-
-      // No Range header, send the whole file
-      const fileStream = fs.createReadStream(fullPath);
-      return new Response(fileStream as any, {
-        status: 200,
-        headers: {
-          "Content-Length": fileSize.toString(),
-          "Content-Type": "video/mp4", // Adjust if you support other formats
-          "Accept-Ranges": "bytes",
-        },
-      });
-    });
+    protocol.handle("media", streamVideo);
   })
   .catch((error) => {
     console.error("Error registering protocol handler:", error);
