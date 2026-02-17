@@ -100,6 +100,29 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
 
         {/* Video Player */}
         {video ? (
+          // <video
+          //   ref={videoRef}
+          //   controls
+          //   autoPlay
+          //   preload="auto"
+          //   src={video.streamUrl}
+          //   onError={(e) => {
+          //     console.error('Video error:', e);
+          //     console.error('Video source:', video.streamUrl);
+          //   }}
+          //   onLoadedData={() => {
+          //     console.log('Video loaded successfully');
+          //   }}
+          //   style={{
+          //     maxWidth: "95%",
+          //     maxHeight: "95%",
+          //     width: "auto",
+          //     height: "auto",
+          //     animation: "scaleIn 0.4s ease-out",
+          //   }}
+          // >
+          //   Your browser does not support the video tag.
+          // </video>
           <video
             ref={videoRef}
             controls
