@@ -37,6 +37,8 @@ declare global {
   interface Window {
     storageApi: {
       videoData: () => Promise<ProtocolResType>;
+      documentData: () => Promise<ProtocolResType>;
+      galleryData: () => Promise<ProtocolResType>;
     };
   }
 }
