@@ -1,21 +1,29 @@
-export type VideoFile = {
+export type VideoFileType = {
     title: string
     videoPath: string
     streamUrl: string
 }
 
-export type VideoTree = {
+export type VideoFolderTreeType = {
     folderName: string,
-    videoFiles: VideoFile[]
+    videoFiles: VideoFileType[]
 }
 
-export type VideoApiRes = {
+export type FileType = {
+    title: string
+    filePath: string
+    streamUrl: string
+}
+
+export type VideoDocumentType = {
+        videoTree: VideoFolderTreeType[]
+        videoList: VideoFileType[]
+    }
+
+export type ProtocolResType = {
     success: boolean
     message: string
-    data: {
-        videoTree: VideoTree[]
-        videoList: VideoFile[]
-    } | null
+    data: VideoDocumentType | FileType[] | null
 }
 
-export type IPCTypes = 'video-tree';
+export type IPCTypes = 'video-tree' | 'documents' | "gallery";

@@ -6,5 +6,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { IPCTypes } from './types/main.types';
 
 contextBridge.exposeInMainWorld('storageApi', {
-    videoData: () => ipcRenderer.invoke('video-tree' as IPCTypes)
+    videoData: () => ipcRenderer.invoke('video-tree' as IPCTypes),
+    documentData: () => ipcRenderer.invoke('documents' as IPCTypes),
+    galleryData: () => ipcRenderer.invoke('gallery' as IPCTypes)
 });

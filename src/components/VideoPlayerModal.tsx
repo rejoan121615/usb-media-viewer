@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Modal, Box, IconButton } from "@mui/material";
 import { IoClose } from "react-icons/io5";
-import { VideoFile } from "../types/main.types";
+import { VideoFileType } from "../types/main.types";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
@@ -13,7 +13,7 @@ import {
 interface VideoPlayerModalProps {
   open: boolean;
   onClose: () => void;
-  video: VideoFile;
+  video: VideoFileType;
 }
 
 

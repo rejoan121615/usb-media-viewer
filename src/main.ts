@@ -1,10 +1,12 @@
 import { app, BrowserWindow, ipcMain, protocol } from "electron";
 import path from "path";
 import started from "electron-squirrel-startup";
-import { ReadVideoFiles, streamVideo } from "./modules/ReadVideos";
+import { FetchVideoFiles, streamVideo } from "./modules/VideoModule";
 import { IPCTypes } from "./types/main.types";
 import { pathToFileURL } from "url";
 import fs from "fs";
+import { FetchDocumentFiles } from "./modules/DocumentModule";
+import { FetchGalleryFiles } from "./modules/GalleryModule";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -60,7 +62,9 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 // ipcMain.handle('read-video-files', ReadVideoFiles);
 // ReadVideoFiles();
-ipcMain.handle("video-tree" as IPCTypes, ReadVideoFiles);
+ipcMain.handle("video-tree" as IPCTypes, FetchVideoFiles);
+ipcMain.handle("documents" as IPCTypes, FetchDocumentFiles);
+ipcMain.handle("gallery" as IPCTypes, FetchGalleryFiles);
 
 // register protocol handler for video files
 
@@ -74,7 +78,7 @@ protocol.registerSchemesAsPrivileged([
       stream: true,
       bypassCSP: true,
     },
-  },
+  }
 ]);
 
 app

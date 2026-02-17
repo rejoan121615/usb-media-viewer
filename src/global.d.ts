@@ -1,4 +1,4 @@
-import type { VideoApiRes } from "./types/main.types";
+import type { ProtocolResType } from "./types/main.types";
 
 declare module '*.css';
 
@@ -36,7 +36,7 @@ declare module '*.webp' {
 declare global {
   interface Window {
     storageApi: {
-      videoData: () => Promise<VideoApiRes>;
+      videoData: () => Promise<ProtocolResType>;
     };
   }
 }

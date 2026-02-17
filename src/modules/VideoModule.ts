@@ -1,11 +1,11 @@
 import fs from "fs-extra";
 import path from "path";
-import { VideoApiRes, VideoTree } from "../types/main.types";
+import { ProtocolResType, VideoFolderTreeType } from "../types/main.types";
 
 const USBPath = process.cwd();
 const videoFolderPath = path.join(USBPath, "..", "data", "videos");
 
-export async function ReadVideoFiles(): Promise<VideoApiRes> {
+export async function FetchVideoFiles(): Promise<ProtocolResType> {
   try {
     if (!fs.existsSync(videoFolderPath)) {
       return {
@@ -26,14 +26,14 @@ export async function ReadVideoFiles(): Promise<VideoApiRes> {
     }
 
     // get list of video files in each chapter folder and create video tree objects
-    const videoTree: VideoTree[] = chapterStructure.map((folderName) => {
+    const videoTree: VideoFolderTreeType[] = chapterStructure.map((folderName) => {
       const videoFiles = fs.readdirSync(path.join(videoFolderPath, folderName));
       const videoFileObjects = videoFiles
         .map((video) => {
           return {
             title: video,
             videoPath: path.join(videoFolderPath, folderName, video),
-            streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
+            streamUrl: `video://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
           };
         })
         .filter((video) => (video.title.endsWith(".mp4") ? true : false));
@@ -67,9 +67,10 @@ export async function ReadVideoFiles(): Promise<VideoApiRes> {
 }
 
 export async function streamVideo(request: Request) {
-  const USBPath = process.cwd();
-  const videoFolderPath = path.join(USBPath, "..", "data", "videos");
-  const filePath = decodeURIComponent(request.url.replace("media://", ""));
+
+  console.log("Received request for video stream:", request);
+
+  const filePath = decodeURIComponent(request.url.replace("video://", ""));
   const fullPath = path.join(videoFolderPath, filePath);
 
   // Check if file exists
