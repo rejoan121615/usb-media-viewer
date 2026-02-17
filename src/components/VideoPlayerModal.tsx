@@ -2,6 +2,13 @@ import React, { useRef, useEffect } from "react";
 import { Modal, Box, IconButton } from "@mui/material";
 import { IoClose } from "react-icons/io5";
 import { VideoFile } from "../types/main.types";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import {
+  defaultLayoutIcons,
+  DefaultVideoLayout,
+} from "@vidstack/react/player/layouts/default";
 
 interface VideoPlayerModalProps {
   open: boolean;
@@ -22,7 +29,7 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
         playPromise.catch((error) => {
-          console.error('Error playing video:', error);
+          console.error("Error playing video:", error);
         });
       }
     }
@@ -100,52 +107,16 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
 
         {/* Video Player */}
         {video ? (
-          // <video
-          //   ref={videoRef}
-          //   controls
-          //   autoPlay
-          //   preload="auto"
-          //   src={video.streamUrl}
-          //   onError={(e) => {
-          //     console.error('Video error:', e);
-          //     console.error('Video source:', video.streamUrl);
-          //   }}
-          //   onLoadedData={() => {
-          //     console.log('Video loaded successfully');
-          //   }}
-          //   style={{
-          //     maxWidth: "95%",
-          //     maxHeight: "95%",
-          //     width: "auto",
-          //     height: "auto",
-          //     animation: "scaleIn 0.4s ease-out",
-          //   }}
-          // >
-          //   Your browser does not support the video tag.
-          // </video>
-          <video
-            ref={videoRef}
-            controls
-            autoPlay
-            preload="auto"
+          <MediaPlayer
+            title={video.title}
             src={video.streamUrl}
-            onError={(e) => {
-              console.error('Video error:', e);
-              console.error('Video source:', video.streamUrl);
-            }}
-            onLoadedData={() => {
-              console.log('Video loaded successfully');
-            }}
-            style={{
-              maxWidth: "95%",
-              maxHeight: "95%",
-              width: "auto",
-              height: "auto",
-              animation: "scaleIn 0.4s ease-out",
-            }}
           >
-            Your browser does not support the video tag.
-          </video>
+            <MediaProvider />
+            <DefaultVideoLayout
+              thumbnails="video-thumbnails.jpg"
+              icons={defaultLayoutIcons}
+            />
+          </MediaPlayer>
         ) : null}
 
         <style>
