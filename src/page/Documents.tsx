@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box, Grid, Paper } from "@mui/material";
 import {
-  VideoFileType,
-
   FileType,
 } from "../types/main.types";
+import { FaFilePdf } from "react-icons/fa";
 
 const Documents = () => {
   const [documents, setDocuments] = useState<FileType[] | null>(null);
@@ -48,9 +47,10 @@ const Documents = () => {
 
       <Grid container spacing={3}>
         {documents?.map((document, index) => (
-          <div key={index}>
-            <img src={document.streamUrl} alt={document.title} />
-          </div>
+          <Paper key={index}>
+            <FaFilePdf size={48} />
+            <Typography variant="body1">{document.title}</Typography>
+          </Paper>
         ))}
       </Grid>
 

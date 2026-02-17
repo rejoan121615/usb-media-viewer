@@ -33,7 +33,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
           return {
             title: video,
             videoPath: path.join(videoFolderPath, folderName, video),
-            streamUrl: `video://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
+            streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
           };
         })
         .filter((video) => (video.title.endsWith(".mp4") ? true : false));
@@ -66,7 +66,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
   }
 }
 
-export async function streamVideo(request: Request) {
+export async function ServeVideoContent(request: Request) {
 
   console.log("Received request for video stream:", request);
 

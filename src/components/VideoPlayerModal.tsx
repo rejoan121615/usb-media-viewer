@@ -113,7 +113,8 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({ open, onClose, vide
           <MediaPlayer
             ref={playerRef}
             title={video.title}
-            src={video.streamUrl}
+            src={`${video.streamUrl}`}
+            // src={'hello://localhost:3000/video/Chapter%201/Video%201.mp4'}
             autoPlay
           >
             <MediaProvider />

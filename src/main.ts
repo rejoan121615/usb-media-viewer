@@ -1,12 +1,13 @@
 import { app, BrowserWindow, ipcMain, protocol } from "electron";
 import path from "path";
 import started from "electron-squirrel-startup";
-import { FetchVideoFiles, streamVideo } from "./modules/VideoModule";
+import { FetchVideoFiles, ServeVideoContent } from "./modules/VideoModule";
 import { IPCTypes } from "./types/main.types";
 import { pathToFileURL } from "url";
 import fs from "fs";
 import { FetchDocumentFiles } from "./modules/DocumentModule";
 import { FetchGalleryFiles } from "./modules/GalleryModule";
+import { ProtocolRequestHandler } from "./modules/ProtocolHandler";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -84,7 +85,7 @@ protocol.registerSchemesAsPrivileged([
 app
   .whenReady()
   .then(() => {
-    protocol.handle("media", streamVideo);
+    protocol.handle("media", ProtocolRequestHandler);
   })
   .catch((error) => {
     console.error("Error registering protocol handler:", error);
