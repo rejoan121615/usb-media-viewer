@@ -15,11 +15,12 @@ export function ProtocolRequestHandler(request: Request) {
     const fileMimeType = mime.lookup(filePath);
 
     if (fileMimeType && fileMimeType.startsWith("video/")) {
-        ServeVideoContent(request);
+        return ServeVideoContent(request);
     } else if (fileMimeType && fileMimeType.startsWith("image/")) {
-        ServeGalleryContent(request);
+        return ServeGalleryContent(request);
     } else if (fileMimeType && fileMimeType === "application/pdf") {
         console.log("Received request for document stream:", request);
+        return new Response("PDF support not implemented yet", { status: 501 });
     } else {
         console.log("Received request for unknown media type:", request);
         console.log("requested media type:", mime.lookup(filePath));

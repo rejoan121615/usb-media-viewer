@@ -29,7 +29,6 @@ export function FetchGalleryFiles(): Promise<ProtocolResType> {
     return ext === ".jpg" || ext === ".jpeg" || ext === ".png";
   });
 
-  console.log("Gallery files ", galleryFiles);
 
   return Promise.resolve<ProtocolResType>({
     success: true,
@@ -46,7 +45,6 @@ export async function ServeGalleryContent(request: Request) {
 
   // Check if file exists
   if (!fs.existsSync(fullPath)) {
-    console.log("File not found:", fullPath);
     return new Response("File not found", { status: 404 });
   }
 
