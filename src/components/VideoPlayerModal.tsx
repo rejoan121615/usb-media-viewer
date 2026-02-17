@@ -16,28 +16,31 @@ interface VideoPlayerModalProps {
   video: VideoFile;
 }
 
-const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
-  open,
-  onClose,
-  video,
-}) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+
+const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({ open, onClose, video }) => {
+  const playerRef = useRef<any>(null);
 
   useEffect(() => {
-    if (open && videoRef.current && video) {
-      videoRef.current.load();
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.error("Error playing video:", error);
-        });
+    if (open && playerRef.current && video) {
+      // Play the video
+      playerRef.current.play?.();
+      // Request fullscreen
+      const container = playerRef.current?.container || playerRef.current;
+      if (container?.requestFullscreen) {
+        container.requestFullscreen().catch(() => {});
+      } else if (container?.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
       }
     }
   }, [open, video]);
 
   const handleClose = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
+    if (playerRef.current) {
+      playerRef.current.pause?.();
+      // Exit fullscreen if open
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.();
+      }
     }
     onClose();
   };
@@ -108,8 +111,10 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
         {/* Video Player */}
         {video ? (
           <MediaPlayer
+            ref={playerRef}
             title={video.title}
             src={video.streamUrl}
+            autoPlay
           >
             <MediaProvider />
             <DefaultVideoLayout
