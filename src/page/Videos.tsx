@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, Grid } from "@mui/material";
-import VideoCard from "@/src/components/VideoCard";
+import MediaCard from "@/src/components/MediaCard";
 import VideoPlayerModal from "@/src/components/VideoPlayerModal";
 import {
   VideoFileType,
@@ -61,10 +61,14 @@ const Videos = () => {
 
       <Grid container spacing={3}>
         {videos?.videoList.map((video, index) => (
-          <VideoCard
-            handleVideoClick={() => handleVideoClick(video)}
-            video={video}
-            key={index}
+          <MediaCard
+          key={index}
+          title={video.title}
+          thumbnail={video.thumbnail}
+          thumbnailAlt={`Thumbnail for ${video.title}`}
+          mediaType="video"
+          videoDuration={video.duration}
+          handleVideoClick={() => handleVideoClick(video)}
           />
         ))}
       </Grid>

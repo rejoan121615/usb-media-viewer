@@ -11,15 +11,23 @@ import {
 } from "@mui/material";
 import { MdPlayCircleOutline as PlayIcon } from "react-icons/md";
 
-const VideoCard = ({
-  video,
+const MediaCard = ({
+  title,
+  thumbnail,
+  thumbnailAlt,
+  mediaType,
+  videoDuration,
   handleVideoClick,
 }: {
-  video: any;
+  title: string;
+  thumbnail: string;
+  thumbnailAlt: string;
+  mediaType: "video" | "gallery" | "document";
+  videoDuration?: string;
   handleVideoClick: () => void;
 }) => {
   return (
-    <Grid size={4} key={video.id}>
+    <Grid size={4}>
       <Card
         elevation={2}
         sx={{
@@ -38,8 +46,8 @@ const VideoCard = ({
             <CardMedia
               component="img"
               height="180"
-              image={video.thumbnail}
-              alt={video.title}
+              image={thumbnail}
+              alt={thumbnailAlt}
             />
             <Box
               sx={{
@@ -61,18 +69,20 @@ const VideoCard = ({
             >
               <PlayIcon size={60} color="white" />
             </Box>
-            <Chip
-              label={video.duration}
-              size="small"
-              sx={{
-                position: "absolute",
-                bottom: 8,
-                right: 8,
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
+            {(mediaType === "video" && videoDuration) && (
+              <Chip
+                label={videoDuration}
+                size="small"
+                sx={{
+                  position: "absolute",
+                  bottom: 8,
+                  right: 8,
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
                 color: "white",
                 fontWeight: "bold",
               }}
             />
+            )}
           </Box>
           <CardContent>
             <Box
@@ -95,7 +105,7 @@ const VideoCard = ({
                   flex: 1,
                 }}
               >
-                {video.title}
+                {title}
               </Typography>
             </Box>
           </CardContent>
@@ -105,5 +115,5 @@ const VideoCard = ({
   );
 };
 
-export default VideoCard;
+export default MediaCard;
 

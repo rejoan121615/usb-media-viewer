@@ -3,6 +3,7 @@ import { Typography, Box, Grid } from "@mui/material";
 import {
   FileType,
 } from "../types/main.types";
+import MediaCard from "../components/MediaCard";
 
 const Gallery = () => {
   const [gallery, setGallery] = useState<FileType[] | null>(null);
@@ -48,9 +49,15 @@ const Gallery = () => {
 
       <Grid container spacing={3}>
         {gallery?.map((item, index) => (
-          <div key={index}>
-            <img src={item.streamUrl} alt={item.title} />
-          </div>
+          <Grid size={4} key={index}>
+            <MediaCard
+              title={item.title}
+              thumbnail={item.filePath} // Assuming filePath is the thumbnail for gallery items
+              thumbnailAlt={item.title}
+              mediaType="gallery"
+              handleVideoClick={() => {}}
+            />
+          </Grid>
         ))}
       </Grid>
 
