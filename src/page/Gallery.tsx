@@ -52,8 +52,8 @@ const Gallery = () => {
           <Grid size={4} key={index}>
             <MediaCard
               title={item.title}
-              thumbnail={item.filePath} // Assuming filePath is the thumbnail for gallery items
-              thumbnailAlt={item.title}
+              thumbnail={item.streamUrl}
+              thumbnailAlt={`${item.title} thumbnail`}
               mediaType="gallery"
               handleVideoClick={() => {}}
             />
