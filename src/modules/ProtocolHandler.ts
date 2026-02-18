@@ -1,29 +1,29 @@
 import path from "path";
 import fs from "fs-extra";
-import { ServeVideoContent } from "./VideoModule";
+import { ServeThumbnailContent, ServeVideoContent } from "./VideoModule";
 import { ServeGalleryContent } from "./GalleryModule";
 import mime from "mime-types";
 
 
-
-const USBPath = process.cwd();
-const videoFolderPath = path.join(USBPath, "..", "data", "videos");
-
 export function ProtocolRequestHandler(request: Request) {
 
-    const filePath = decodeURIComponent(request.url.replace("media://", ""));
+    const {host, pathname, search, searchParams, } = new URL(request.url);
+    const filePath = decodeURIComponent(path.join(host, pathname));
     const fileMimeType = mime.lookup(filePath);
 
-    if (fileMimeType && fileMimeType.startsWith("video/")) {
+    if (fileMimeType && fileMimeType.startsWith("video/") && searchParams.has("thumbnail")) {
+        console.log("Received request for video thumbnail:");
+        return ServeThumbnailContent(request);
+    } else if (fileMimeType && fileMimeType.startsWith("video/")) {
+        console.log("Recived request for video content");
         return ServeVideoContent(request);
     } else if (fileMimeType && fileMimeType.startsWith("image/")) {
+        console.log("Recived request for gallery content");
         return ServeGalleryContent(request);
     } else if (fileMimeType && fileMimeType === "application/pdf") {
-        console.log("Received request for document stream:", request);
+        console.log("Recived request for PDF content");
         return new Response("PDF support not implemented yet", { status: 501 });
     } else {
-        console.log("Received request for unknown media type:", request);
-        console.log("requested media type:", mime.lookup(filePath));
         return new Response("Unsupported media type", { status: 415 });
     }
 

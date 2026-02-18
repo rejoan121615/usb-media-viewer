@@ -1,6 +1,13 @@
 import fs from "fs-extra";
 import path from "path";
-import { ProtocolResType, VideoFolderTreeType } from "../types/main.types";
+import {
+  ProtocolResType,
+  VideoFileType,
+  VideoFolderTreeType,
+} from "../types/main.types";
+import mime from "mime-types";
+import ThumbnailGenerator from "./ThumbnailGenerator";
+
 
 const USBPath = process.cwd();
 const videoFolderPath = path.join(USBPath, "..", "data", "videos");
@@ -26,23 +33,29 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
     }
 
     // get list of video files in each chapter folder and create video tree objects
-    const videoTree: VideoFolderTreeType[] = chapterStructure.map((folderName) => {
-      const videoFiles = fs.readdirSync(path.join(videoFolderPath, folderName));
-      const videoFileObjects = videoFiles
-        .map((video) => {
-          return {
-            title: video,
-            videoPath: path.join(videoFolderPath, folderName, video),
-            streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
-          };
-        })
-        .filter((video) => (video.title.endsWith(".mp4") ? true : false));
+    const videoTree: VideoFolderTreeType[] = chapterStructure.map(
+      (folderName) => {
+        const videoFiles = fs.readdirSync(
+          path.join(videoFolderPath, folderName),
+        );
+        const videoFileObjects = videoFiles
+          .map((video) => {
+            return {
+              title: video,
+              videoPath: path.join(videoFolderPath, folderName, video),
+              streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
+              thumbnail: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}?thumbnail=true`,
+              duration: "00:00", // Placeholder, you can update this with actual duration if available
+            };
+          })
+          .filter((video) => (video.title.endsWith(".mp4") ? true : false));
 
-      return {
-        folderName: folderName,
-        videoFiles: videoFileObjects,
-      };
-    });
+        return {
+          folderName: folderName,
+          videoFiles: videoFileObjects,
+        };
+      },
+    );
 
     // get all the videos as an array of video file objects
     const allVideos = videoTree.reduce((acc: any[], folder) => {
@@ -67,7 +80,6 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
 }
 
 export async function ServeVideoContent(request: Request) {
-
   console.log("Received request for video stream:", request);
 
   const filePath = decodeURIComponent(request.url.replace("video://", ""));
@@ -114,4 +126,65 @@ export async function ServeVideoContent(request: Request) {
       "Accept-Ranges": "bytes",
     },
   });
+}
+
+export async function ServeThumbnailContent(request: Request) {
+  const { host, pathname, searchParams } = new URL(request.url);
+
+  const folderName = decodeURIComponent(host);
+  const fileName = decodeURIComponent(
+    path.parse(pathname.replace(/\/+$/, "")).name,
+  );
+  const thumbnailPath = path.join(
+    videoFolderPath,
+    folderName,
+    "thumbnails",
+    `${fileName}.jpg`,
+  );
+  const videoPath = path.join(videoFolderPath, folderName, `${fileName}.mp4`);
+
+  console.log('thumbnail path is:', thumbnailPath);
+  console.log('video path is:', videoPath);
+
+  // Check if file exists
+  if (!fs.existsSync(thumbnailPath)) {
+    console.log("Thumbnail not found, generating thumbnail file ");
+  
+
+    const thumbnailResult = await ThumbnailGenerator(videoPath, thumbnailPath);
+ 
+
+    console.log("Thumbnail generated:", thumbnailResult);
+
+    // write the generated thumbnail to the actual file system for future requests
+    // await fs.ensureDir(path.dirname(thumbnailPath));
+    // await fs.writeFile(thumbnailPath, generatedThumbnailData as Uint8Array);
+
+    // Clean up FFmpeg virtual file system
+    // await ffmpeg.deleteFile(`${fileName}.mp4`);
+    // await ffmpeg.deleteFile(`${fileName}.jpg`);
+
+    // Return the generated thumbnail
+    // const thumbnailBuffer = Buffer.from(generatedThumbnailData as Uint8Array);
+    // return new Response(thumbnailBuffer as any, {
+    //   status: 200,
+    //   headers: {
+    //     "Content-Type": "image/jpeg",
+    //     "Content-Length": thumbnailBuffer.length.toString(),
+    //   },
+    // });
+  } else {
+    // No Range header, send the whole file
+    const fileStream = fs.createReadStream(thumbnailPath);
+
+    return new Response(fileStream as any, {
+      status: 200,
+      headers: {
+        "Content-Type":
+          mime.lookup(thumbnailPath) || "application/octet-stream",
+        "Content-Length": fs.statSync(thumbnailPath).size.toString(),
+        "Accept-Ranges": "bytes",
+      },
+    });
+  }
 }

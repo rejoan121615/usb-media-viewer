@@ -1,41 +1,42 @@
-import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerSquirrel } from '@electron-forge/maker-squirrel';
-import { MakerZIP } from '@electron-forge/maker-zip';
-import { MakerDeb } from '@electron-forge/maker-deb';
-import { MakerRpm } from '@electron-forge/maker-rpm';
-import { VitePlugin } from '@electron-forge/plugin-vite';
-import { FusesPlugin } from '@electron-forge/plugin-fuses';
-import { FuseV1Options, FuseVersion } from '@electron/fuses';
-import MakerPortable from '@rabbitholesyndrome/electron-forge-maker-portable';
+import type { ForgeConfig } from "@electron-forge/shared-types";
+import { MakerSquirrel } from "@electron-forge/maker-squirrel";
+import { MakerZIP } from "@electron-forge/maker-zip";
+import { MakerDeb } from "@electron-forge/maker-deb";
+import { MakerRpm } from "@electron-forge/maker-rpm";
+import { VitePlugin } from "@electron-forge/plugin-vite";
+import { FusesPlugin } from "@electron-forge/plugin-fuses";
+import { FuseV1Options, FuseVersion } from "@electron/fuses";
+import MakerPortable from "@rabbitholesyndrome/electron-forge-maker-portable";
 
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
+    extraResource: ["node_modules/ffmpeg-static"],
   },
   rebuildConfig: {},
   makers: [
     new MakerPortable({
-      artifactName: '${productName}-portable-${version}.exe',
+      artifactName: "${productName}-portable-${version}.exe",
     }),
   ],
   plugins: [
     new VitePlugin({
       build: [
         {
-          entry: 'src/main.ts',
-          config: 'vite.main.config.ts',
-          target: 'main',
+          entry: "src/main.ts",
+          config: "vite.main.config.ts",
+          target: "main",
         },
         {
-          entry: 'src/preload.ts',
-          config: 'vite.preload.config.ts',
-          target: 'preload',
+          entry: "src/preload.ts",
+          config: "vite.preload.config.ts",
+          target: "preload",
         },
       ],
       renderer: [
         {
-          name: 'main_window',
-          config: 'vite.renderer.config.ts',
+          name: "main_window",
+          config: "vite.renderer.config.ts",
         },
       ],
     }),

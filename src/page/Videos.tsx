@@ -61,15 +61,17 @@ const Videos = () => {
 
       <Grid container spacing={3}>
         {videos?.videoList.map((video, index) => (
-          <MediaCard
-          key={index}
-          title={video.title}
-          thumbnail={video.thumbnail}
-          thumbnailAlt={`Thumbnail for ${video.title}`}
-          mediaType="video"
-          videoDuration={video.duration}
-          handleVideoClick={() => handleVideoClick(video)}
-          />
+          <Grid size={4} key={index}>
+            <MediaCard
+              key={index}
+              title={video.title}
+              thumbnail={video.thumbnail}
+              thumbnailAlt={`Thumbnail for ${video.title}`}
+              mediaType="video"
+              videoDuration={video.duration}
+              handleVideoClick={() => handleVideoClick(video)}
+            />
+          </Grid>
         ))}
       </Grid>
 
