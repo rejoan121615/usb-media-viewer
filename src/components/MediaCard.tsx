@@ -13,6 +13,8 @@ import {
   MdOutlinePhotoSizeSelectLarge,
   MdOpenInNew,
 } from "react-icons/md";
+import { Video } from "electron";
+import { VideoDuration } from "../types/main.types";
 
 const MediaCard = ({
   title,
@@ -26,7 +28,7 @@ const MediaCard = ({
   thumbnail: string;
   thumbnailAlt: string;
   mediaType: "video" | "gallery" | "document";
-  videoDuration?: string;
+  videoDuration?: VideoDuration;
   handleVideoClick: () => void;
 }) => {
   return (
@@ -79,7 +81,7 @@ const MediaCard = ({
           </Box>
           {mediaType === "video" && videoDuration && (
             <Chip
-              label={videoDuration}
+              label={`${videoDuration.minutes}:${videoDuration.seconds}`}
               size="small"
               sx={{
                 position: "absolute",

@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
 import fs from "fs-extra";
+import { VideoDuration } from "../types/main.types";
 const require = createRequire(import.meta.url);
 const ffmpegPath: string = require("ffmpeg-static");
 
@@ -35,10 +36,7 @@ export async function ThumbnailGenerator(
   });
 }
 
-export type VideoDuration = {
-  minutes: string;
-  seconds: string;
-};
+
 
 export async function GetVideoDuration(videoPath: string): Promise<VideoDuration> {
   return new Promise((resolve) => {
@@ -59,8 +57,6 @@ export async function GetVideoDuration(videoPath: string): Promise<VideoDuration
 
         // Roll hours into minutes
         const totalMinutes = hours * 60 + minutes;
-
-        console.log(`Extracted duration - Hours: ${hours}, Minutes: ${minutes}, Seconds: ${seconds}`);
 
         resolve({
           minutes: String(totalMinutes).padStart(2, "0"),

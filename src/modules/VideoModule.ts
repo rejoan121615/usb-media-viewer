@@ -8,7 +8,6 @@ import {
 import mime from "mime-types";
 import { GetVideoDuration, ThumbnailGenerator } from "./FFmpegOperations";
 
-
 const USBPath = process.cwd();
 const videoFolderPath = path.join(USBPath, "..", "data", "videos");
 
@@ -33,28 +32,45 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
     }
 
     // get list of video files in each chapter folder and create video tree objects
-    const videoTree: VideoFolderTreeType[] = chapterStructure.map(
-     (folderName) => {
+    const videoTree: VideoFolderTreeType[] = await Promise.all(
+      chapterStructure.map(async (folderName) => {
         const videoFiles = fs.readdirSync(
           path.join(videoFolderPath, folderName),
         );
-        const videoFileObjects = videoFiles
-          .map((video) => {
+
+        // get each file object 
+        let videoFileObjects = await Promise.all(
+          videoFiles
+          .map(async (video) => {
+
+
+            const fullVideoPath = path.join(videoFolderPath, folderName, video);
+            const thumbnailPath = path.join(videoFolderPath, folderName, "thumbnails", `${path.parse(video).name}.jpg`);
+
+
+            const [duration] = await Promise.all([
+              GetVideoDuration(fullVideoPath),
+              // fs.existsSync (thumbnailPath) ? Promise.resolve() : ThumbnailGenerator(fullVideoPath, thumbnailPath),
+            ]);
+
             return {
               title: video,
-              videoPath: path.join(videoFolderPath, folderName, video),
+              videoPath: fullVideoPath,
               streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
               thumbnail: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}?thumbnail=true`,
-              duration: '0', // Placeholder, you can update this with actual duration if available
+              duration: duration, // Placeholder, you can update this with actual duration if available
             };
           })
-          .filter((video) => (video.title.endsWith(".mp4") ? true : false));
+        );
+        
+        videoFileObjects = videoFileObjects.filter((video) => (video.title.endsWith(".mp4") ? true : false));
+
 
         return {
           folderName: folderName,
           videoFiles: videoFileObjects,
         };
-      },
+      }),
     );
 
     // get all the videos as an array of video file objects
@@ -141,16 +157,14 @@ export async function ServeThumbnailContent(request: Request) {
   );
   const videoPath = path.join(videoFolderPath, folderName, `${fileName}.mp4`);
 
-  console.log('thumbnail path is:', thumbnailPath);
-  console.log('video path is:', videoPath);
+  console.log("thumbnail path is:", thumbnailPath);
+  console.log("video path is:", videoPath);
 
   // Check if file exists
   if (!fs.existsSync(thumbnailPath)) {
     console.log("Thumbnail not found, generating thumbnail file ");
-  
 
     const thumbnailResult = await ThumbnailGenerator(videoPath, thumbnailPath);
- 
 
     console.log("Thumbnail generated:", thumbnailResult);
 

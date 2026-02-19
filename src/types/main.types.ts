@@ -3,8 +3,13 @@ export type VideoFileType = {
     videoPath: string
     streamUrl: string
     thumbnail: string
-    duration?: string
+    duration?: VideoDuration
 }
+
+export type VideoDuration = {
+  minutes: string;
+  seconds: string;
+};
 
 export type VideoFolderTreeType = {
     folderName: string,
