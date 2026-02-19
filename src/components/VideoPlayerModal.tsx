@@ -121,6 +121,10 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({ open, onClose, vide
             <DefaultVideoLayout
               thumbnails="video-thumbnails.jpg"
               icons={defaultLayoutIcons}
+              slots={{
+                googleCastButton: null,
+                pipButton: null
+              }}
             />
           </MediaPlayer>
         ) : null}
