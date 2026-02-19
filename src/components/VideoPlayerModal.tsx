@@ -114,8 +114,8 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({ open, onClose, vide
             ref={playerRef}
             title={video.title}
             src={`${video.streamUrl}`}
-            // src={'hello://localhost:3000/video/Chapter%201/Video%201.mp4'}
             autoPlay
+            style={{ width: '100%', maxHeight: '90vh', aspectRatio: '16/9' }}
           >
             <MediaProvider />
             <DefaultVideoLayout
