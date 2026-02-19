@@ -6,7 +6,7 @@ import {
   VideoFolderTreeType,
 } from "../types/main.types";
 import mime from "mime-types";
-import ThumbnailGenerator from "./ThumbnailGenerator";
+import { GetVideoDuration, ThumbnailGenerator } from "./FFmpegOperations";
 
 
 const USBPath = process.cwd();
@@ -34,7 +34,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
 
     // get list of video files in each chapter folder and create video tree objects
     const videoTree: VideoFolderTreeType[] = chapterStructure.map(
-      (folderName) => {
+     (folderName) => {
         const videoFiles = fs.readdirSync(
           path.join(videoFolderPath, folderName),
         );
@@ -45,7 +45,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
               videoPath: path.join(videoFolderPath, folderName, video),
               streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
               thumbnail: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}?thumbnail=true`,
-              duration: "00:00", // Placeholder, you can update this with actual duration if available
+              duration: '0', // Placeholder, you can update this with actual duration if available
             };
           })
           .filter((video) => (video.title.endsWith(".mp4") ? true : false));
@@ -80,8 +80,6 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
 }
 
 export async function ServeVideoContent(request: Request) {
-  console.log("Received request for video stream:", request);
-
   const filePath = decodeURIComponent(request.url.replace("video://", ""));
   const fullPath = path.join(videoFolderPath, filePath);
 
