@@ -41,6 +41,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
         // get each file object 
         let videoFileObjects = await Promise.all(
           videoFiles
+          .filter( (file) => file.endsWith(".mp4"))
           .map(async (video) => {
 
 
@@ -50,7 +51,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
 
             const [duration] = await Promise.all([
               GetVideoDuration(fullVideoPath),
-              // fs.existsSync (thumbnailPath) ? Promise.resolve() : ThumbnailGenerator(fullVideoPath, thumbnailPath),
+              fs.existsSync (thumbnailPath) ? Promise.resolve() : ThumbnailGenerator(fullVideoPath, thumbnailPath),
             ]);
 
             return {
@@ -63,7 +64,6 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
           })
         );
         
-        videoFileObjects = videoFileObjects.filter((video) => (video.title.endsWith(".mp4") ? true : false));
 
 
         return {

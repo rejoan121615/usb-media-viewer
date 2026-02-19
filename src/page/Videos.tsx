@@ -4,7 +4,6 @@ import MediaCard from "@/src/components/MediaCard";
 import VideoPlayerModal from "@/src/components/VideoPlayerModal";
 import {
   VideoFileType,
-  VideoFolderTreeType,
   VideoDocumentType,
 } from "../types/main.types";
 
