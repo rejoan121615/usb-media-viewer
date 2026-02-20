@@ -11,10 +11,15 @@ interface VideoPlayerModalProps {
   imageList: FileType[];
 }
 
-const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({ open, onClose, image, imageList }) => {
-
-
-
+const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
+  open,
+  onClose,
+  image,
+  imageList,
+}) => {
+  const onInit = () => {
+    console.log("lightGallery has been initialized");
+  };
 
   return (
     <Modal
@@ -79,28 +84,12 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({ open, onClose, imag
           <IoClose size={32} />
         </IconButton>
         {/* modal content - make gallery smaller and prevent overflow */}
-        <Box
-          sx={{
-            maxWidth: { xs: "90vw", sm: "700px" },
-            maxHeight: { xs: "80vh", sm: "80vh" },
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.2)",
-            borderRadius: 2,
-            boxShadow: 3,
-            overflow: "auto",
-            p: { xs: 1, sm: 2 },
-          }}
-        >
+        <Box>
           
         </Box>
       </Box>
     </Modal>
   );
 };
-
 
 export default VideoPlayerModal;
