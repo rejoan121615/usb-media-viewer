@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, Grid, Paper } from "@mui/material";
-import {
-  FileType,
-} from "../types/main.types";
-import { FaFilePdf } from "react-icons/fa";
+import { FileType } from "../types/main.types";
+import MediaCard from "../components/MediaCard";
 
 const Documents = () => {
   const [documents, setDocuments] = useState<FileType[] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-
   useEffect(() => {
     window.storageApi
       .documentData()
       .then((response) => {
-        console.log('Document data response:', response);
+        console.log("Document data response:", response);
         const { data, success, message } = response;
         if (success && data) {
           if (Array.isArray(data)) {
@@ -31,8 +28,6 @@ const Documents = () => {
       });
   }, []);
 
-
-
   return (
     <Box>
       <Typography
@@ -47,10 +42,19 @@ const Documents = () => {
 
       <Grid container spacing={3}>
         {documents?.map((document, index) => (
-          <Paper key={index}>
-            <FaFilePdf size={48} />
-            <Typography variant="body1">{document.title}</Typography>
-          </Paper>
+          <Grid size={4} key={index}>
+            {/* <Paper key={index}>
+              <FaFilePdf size={48} />
+              <Typography variant="body1">{document.title}</Typography>
+            </Paper> */}
+            <MediaCard
+              handleClick={() => console.log("Document clicked:", document)}
+              mediaType="document"
+              thumbnail="/pdf-logo.png"
+              thumbnailAlt="Pdf Icon"
+              title={document.title}
+            />
+          </Grid>
         ))}
       </Grid>
 

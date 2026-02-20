@@ -13,8 +13,8 @@ import {
   MdOutlinePhotoSizeSelectLarge,
   MdOpenInNew,
 } from "react-icons/md";
-import { Video } from "electron";
 import { VideoDuration } from "../types/main.types";
+import { FaFilePdf } from "react-icons/fa";
 
 const MediaCard = ({
   title,
@@ -47,12 +47,23 @@ const MediaCard = ({
     >
       <CardActionArea onClick={() => handleClick()}>
         <Box sx={{ position: "relative" }}>
-          <CardMedia
-            component="img"
-            height="180"
-            image={thumbnail}
-            alt={thumbnailAlt}
-          />
+          {mediaType === "document" ? (
+            <CardMedia>
+              <Box sx={{ width: '100%', height: 180, display: "flex", alignItems: "center", justifyContent: "center" }}>
+
+              {/* <img src="/pdf-logo.png" alt="Pdf Icon" style={{ width: '100px'}} /> */}
+                <FaFilePdf size={80} style={{ margin: "40px auto", display: "block" }} />
+              </Box>
+            </CardMedia>
+          ) : (
+            <CardMedia
+              component="img"
+              height="180"
+              image={thumbnail}
+              alt={thumbnailAlt}
+            />
+          )}
+
           <Box
             sx={{
               position: "absolute",
