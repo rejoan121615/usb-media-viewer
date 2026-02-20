@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, Grid } from "@mui/material";
-import {
-  FileType,
-} from "../types/main.types";
+import { FileType } from "../types/main.types";
 import MediaCard from "../components/MediaCard";
+import GalleryModal from "../components/GalleryModal"; 
 
 const Gallery = () => {
   const [gallery, setGallery] = useState<FileType[] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [selectedVideo, setSelectedVideo] = useState<FileType | null>(null);
 
   useEffect(() => {
     window.storageApi
       .galleryData()
       .then((response) => {
-
-        console.log('Gallery data response:', response);
+        console.log("Gallery data response:", response);
 
         const { data, success, message } = response;
         if (success && data) {
@@ -34,6 +33,16 @@ const Gallery = () => {
   }, []);
 
 
+
+
+  const handleImageClick = (image: FileType) => {
+    setSelectedVideo(image);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   return (
     <Box>
@@ -55,13 +64,19 @@ const Gallery = () => {
               thumbnail={item.streamUrl}
               thumbnailAlt={`${item.title} thumbnail`}
               mediaType="gallery"
-              handleVideoClick={() => {}}
+              handleClick={() => handleImageClick(item)}
             />
           </Grid>
         ))}
       </Grid>
 
       {/* Document Player Modal */}
+      <GalleryModal
+        open={modalOpen}
+        onClose={handleModalClose}
+        image={selectedVideo}
+        imageList={gallery || []}
+      />
     </Box>
   );
 };

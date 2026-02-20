@@ -22,14 +22,14 @@ const MediaCard = ({
   thumbnailAlt,
   mediaType,
   videoDuration,
-  handleVideoClick,
+  handleClick,
 }: {
   title: string;
   thumbnail: string;
   thumbnailAlt: string;
   mediaType: "video" | "gallery" | "document";
   videoDuration?: VideoDuration;
-  handleVideoClick: () => void;
+  handleClick: () => void;
 }) => {
   return (
     <Card
@@ -45,7 +45,7 @@ const MediaCard = ({
         },
       }}
     >
-      <CardActionArea onClick={() => handleVideoClick()}>
+      <CardActionArea onClick={() => handleClick()}>
         <Box sx={{ position: "relative" }}>
           <CardMedia
             component="img"
