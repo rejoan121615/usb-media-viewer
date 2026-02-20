@@ -8,7 +8,7 @@ const Gallery = () => {
   const [gallery, setGallery] = useState<FileType[] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [selectedVideo, setSelectedVideo] = useState<FileType | null>(null);
+  const [selectedImage, setSelectedImage] = useState<number>(0);
 
   useEffect(() => {
     window.storageApi
@@ -32,16 +32,14 @@ const Gallery = () => {
       });
   }, []);
 
-
-
-
-  const handleImageClick = (image: FileType) => {
-    setSelectedVideo(image);
+  const handleImageClick = (index: number) => {
+    setSelectedImage(index);
     setModalOpen(true);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
+    setSelectedImage(null);
   };
 
   return (
@@ -64,7 +62,7 @@ const Gallery = () => {
               thumbnail={item.streamUrl}
               thumbnailAlt={`${item.title} thumbnail`}
               mediaType="gallery"
-              handleClick={() => handleImageClick(item)}
+              handleClick={() => handleImageClick(index)}
             />
           </Grid>
         ))}
@@ -74,7 +72,7 @@ const Gallery = () => {
       <GalleryModal
         open={modalOpen}
         onClose={handleModalClose}
-        image={selectedVideo}
+        image={selectedImage}
         imageList={gallery || []}
       />
     </Box>

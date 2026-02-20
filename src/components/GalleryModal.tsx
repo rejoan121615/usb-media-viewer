@@ -1,13 +1,15 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Modal, Box, IconButton } from "@mui/material";
 import { IoClose } from "react-icons/io5";
 import { FileType } from "../types/main.types";
+import Lightbox, { SlideImage } from 'yet-another-react-lightbox';
+import "yet-another-react-lightbox/styles.css";
 
 
 interface VideoPlayerModalProps {
   open: boolean;
   onClose: () => void;
-  image: FileType;
+  image: number;
   imageList: FileType[];
 }
 
@@ -17,79 +19,29 @@ const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
   image,
   imageList,
 }) => {
-  const onInit = () => {
-    console.log("lightGallery has been initialized");
-  };
+
+  const [slides, setSlides] = useState<SlideImage[]>([]);
+
+
+  useEffect(() => {
+    if (imageList && imageList.length > 0) {
+      const formattedSlides = imageList.map((img) => ({
+        src: img.streamUrl,
+        alt: img.title,
+      }));
+      setSlides(formattedSlides);
+    }
+  }, [imageList, image]);
+
 
   return (
-    <Modal
+    <Lightbox
       open={open}
-      onClose={onClose}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.95)",
-      }}
-      slotProps={{
-        backdrop: {
-          timeout: 500,
-          sx: {
-            animation: "fadeIn 0.3s ease-in-out",
-            "@keyframes fadeIn": {
-              from: { opacity: 0 },
-              to: { opacity: 1 },
-            },
-          },
-        },
-      }}
-    >
-      <Box
-        sx={{
-          position: "relative",
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          outline: "none",
-        }}
-      >
-        {/* Close Button */}
-        <IconButton
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            top: 20,
-            right: 20,
-            color: "white",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.7)",
-            },
-            zIndex: 1,
-            animation: "slideInFromTop 0.4s ease-out",
-            "@keyframes slideInFromTop": {
-              from: {
-                opacity: 0,
-                transform: "translateY(-20px)",
-              },
-              to: {
-                opacity: 1,
-                transform: "translateY(0)",
-              },
-            },
-          }}
-        >
-          <IoClose size={32} />
-        </IconButton>
-        {/* modal content - make gallery smaller and prevent overflow */}
-        <Box>
-          
-        </Box>
-      </Box>
-    </Modal>
-  );
+      close={onClose}
+      slides={slides}
+      index={image}
+    />
+  )
 };
 
 export default VideoPlayerModal;
