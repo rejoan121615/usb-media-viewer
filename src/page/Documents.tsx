@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Typography, Box, Grid, Paper } from "@mui/material";
 import { FileType } from "../types/main.types";
 import MediaCard from "../components/MediaCard";
+import DocumentModal from "../components/DocumentModal";
 
 const Documents = () => {
   const [documents, setDocuments] = useState<FileType[] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<FileType | null>(null);
 
   useEffect(() => {
     window.storageApi
@@ -43,12 +45,11 @@ const Documents = () => {
       <Grid container spacing={3}>
         {documents?.map((document, index) => (
           <Grid size={4} key={index}>
-            {/* <Paper key={index}>
-              <FaFilePdf size={48} />
-              <Typography variant="body1">{document.title}</Typography>
-            </Paper> */}
             <MediaCard
-              handleClick={() => console.log("Document clicked:", document)}
+              handleClick={() => {
+                setSelectedDocument(document);
+                setModalOpen(true);
+              }}
               mediaType="document"
               thumbnail="/pdf-logo.png"
               thumbnailAlt="Pdf Icon"
@@ -59,6 +60,11 @@ const Documents = () => {
       </Grid>
 
       {/* Document Player Modal */}
+      <DocumentModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        document={selectedDocument} // Placeholder, replace with actual video data when available
+      />
     </Box>
   );
 };

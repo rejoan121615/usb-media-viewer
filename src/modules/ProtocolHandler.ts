@@ -1,11 +1,13 @@
 import path from "path";
-import fs from "fs-extra";
 import { ServeThumbnailContent, ServeVideoContent } from "./VideoModule";
 import { ServeGalleryContent } from "./GalleryModule";
 import mime from "mime-types";
+import { ServeDocumentContent } from "./DocumentModule";
 
 
 export function ProtocolRequestHandler(request: Request) {
+
+    console.log('Received protocol request:', request.url);
 
     const {host, pathname, search, searchParams, } = new URL(request.url);
     const filePath = decodeURIComponent(path.join(host, pathname));
@@ -22,7 +24,7 @@ export function ProtocolRequestHandler(request: Request) {
         return ServeGalleryContent(request);
     } else if (fileMimeType && fileMimeType === "application/pdf") {
         console.log("Recived request for PDF content");
-        return new Response("PDF support not implemented yet", { status: 501 });
+        return ServeDocumentContent(request);
     } else {
         return new Response("Unsupported media type", { status: 415 });
     }
