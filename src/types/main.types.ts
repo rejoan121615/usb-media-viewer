@@ -41,3 +41,6 @@ export interface GlobalContextType {
     documents: FileType[];
     gallery: FileType[];
 }
+
+
+export type VideoWindowType = 'all' | 'chapter' ;
