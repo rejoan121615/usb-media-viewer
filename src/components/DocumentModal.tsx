@@ -22,13 +22,11 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
 }) => {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(1);
-
   useEffect(() => {
     console.log("Document in modal:", document);
     // Reset to page 1 when a new document is opened
     if (document) {
-      setPageNumber(1);
-    }
+      setPageNumber(1);    }
   }, [document]);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
