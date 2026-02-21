@@ -2,15 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { Typography, Box, Grid } from "@mui/material";
 import { FileType } from "../types/main.types";
 import MediaCard from "../components/MediaCard";
-import GalleryModal from "../components/GalleryModal"; 
+import GalleryModal from "../components/GalleryModal";
 import GlobalContext from "../context/GlobalContext";
+import useFuseSearch from "../hooks/useFuseSearch";
 
 const Gallery = () => {
-  const { gallery } = useContext(GlobalContext);
+  const { gallery, searchQuery } = useContext(GlobalContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<number>(0);
-
-
 
   const handleImageClick = (index: number) => {
     setSelectedImage(index);
@@ -21,6 +20,11 @@ const Gallery = () => {
     setModalOpen(false);
     setSelectedImage(null);
   };
+
+  const filteredGallery = useFuseSearch<FileType>(searchQuery, gallery, {
+    keys: ["title"],
+    threshold: 0.3,
+  });
 
   return (
     <Box>
@@ -35,7 +39,7 @@ const Gallery = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {gallery?.map((item, index) => (
+        {filteredGallery?.map((item, index) => (
           <Grid size={4} key={index}>
             <MediaCard
               title={item.title}

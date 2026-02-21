@@ -4,12 +4,19 @@ import { FileType } from "../types/main.types";
 import MediaCard from "../components/MediaCard";
 import DocumentModal from "../components/DocumentModal";
 import GlobalContext from "../context/GlobalContext";
+import useFuseSearch from "../hooks/useFuseSearch";
 
 
 const Documents = () => {
-  const { documents } = useContext(GlobalContext);
+  const { documents, searchQuery } = useContext(GlobalContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<FileType | null>(null);
+
+  const filteredDocuments = useFuseSearch<FileType>(
+    searchQuery,
+    documents,
+    { keys: ["title"], threshold: 0.3 }
+  );
 
 
 
@@ -26,7 +33,7 @@ const Documents = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {documents?.map((document, index) => (
+        {filteredDocuments?.map((document, index) => (
           <Grid size={4} key={index}>
             <MediaCard
               handleClick={() => {
