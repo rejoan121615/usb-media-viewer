@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { MdErrorOutline } from "react-icons/md";
 
-const VideoNotFound = ({
+const NotFound = ({
   title = "Nothing found",
   description = "Sorry, we couldn't find anything here.",
   type = "video",
@@ -31,4 +31,4 @@ const VideoNotFound = ({
   );
 };
 
-export default VideoNotFound;
+export default NotFound;

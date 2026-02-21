@@ -7,44 +7,45 @@ const USBDrive = process.cwd();
 const documentsPath = path.join(USBDrive, "..", "data", "documents");
 
 export function FetchDocumentFiles(): Promise<ProtocolResType> {
-
   // if path not exist, return error message
   if (!fs.existsSync(documentsPath)) {
-    return Promise.resolve<ProtocolResType>({
-      success: false,
-      message: "Documents path does not exist",
-      data: null,
-    });
+    fs.ensureDirSync(documentsPath);
   }
 
   // read all files in the documents directory and return an array of file paths
-  const documentFiles: FileType[] = fs
-    .readdirSync(documentsPath)
-    .map((file) => {
-      return {
-        title: file,
-        filePath: path.join(documentsPath, file),
-        streamUrl: `media://${encodeURIComponent(file)}`,
-      };
-    })
-    .filter((file) => {
-      const ext = path.extname(file.title).toLowerCase();
-      return ext === ".pdf";
-    });
+  const rawFiles: string[] = fs.readdirSync(documentsPath);
 
-  return Promise.resolve<ProtocolResType>({
-    success: true,
-    message: "Documents found",
-    data: documentFiles,
-  });
+  if (rawFiles.length === 0) {
+    return Promise.resolve<ProtocolResType>({
+      success: false,
+      message: "No documents found in the data/documents path",
+      data: null,
+    });
+  } else {
+    const documentFiles: FileType[] = rawFiles
+      .map((file) => {
+        return {
+          title: file,
+          filePath: path.join(documentsPath, file),
+          streamUrl: `media://${encodeURIComponent(file)}`,
+        };
+      })
+      .filter((file) => {
+        const ext = path.extname(file.title).toLowerCase();
+        return ext === ".pdf";
+      });
+    return Promise.resolve<ProtocolResType>({
+      success: true,
+      message: "Documents found",
+      data: documentFiles,
+    });
+  }
 }
 
-
 export async function ServeDocumentContent(request: Request) {
-
-
-
-  const filePath = decodeURIComponent(request.url.replace("media://", "").replace(/\/+$/, ""));
+  const filePath = decodeURIComponent(
+    request.url.replace("media://", "").replace(/\/+$/, ""),
+  );
   const fullPath = path.join(documentsPath, filePath);
 
   // Check if file exists

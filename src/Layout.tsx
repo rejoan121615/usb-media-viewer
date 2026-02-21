@@ -23,9 +23,9 @@ const theme = createTheme({
 });
 
 const Layout = () => {
-  const [videos, setVideos] = useState<VideoDocumentType | null>(null);
-  const [gallery, setGallery] = useState<FileType[] | null>(null);
-  const [documents, setDocuments] = useState<FileType[] | null>(null);
+  const [videos, setVideos] = useState<VideoDocumentType>({ videoTree: [], videoList: [] });
+  const [gallery, setGallery] = useState<FileType[]>([]);
+  const [documents, setDocuments] = useState<FileType[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // fetch documents , gallery and videos data Here

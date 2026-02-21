@@ -7,40 +7,44 @@ const USBDrive = process.cwd();
 const galleryPath = path.join(USBDrive, "..", "data", "gallery");
 
 export function FetchGalleryFiles(): Promise<ProtocolResType> {
-
   // if path not exist, return error message
   if (!fs.existsSync(galleryPath)) {
-    return Promise.resolve<ProtocolResType>({
-      success: false,
-      message: "Gallery path does not exist",
-      data: null,
-    });
+    fs.ensureDirSync(galleryPath);
   }
 
   // read all files in the gallery directory and return an array of file paths
-  const galleryFiles: FileType[] = fs.readdirSync(galleryPath).map((file) => {
-    return {
-      title: file,
-      filePath: path.join(galleryPath, file),
-      streamUrl: `media://${encodeURIComponent(file)}`,
-    };
-  }).filter((file) => {
-    const ext = path.extname(file.title).toLowerCase();
-    return ext === ".jpg" || ext === ".jpeg" || ext === ".png";
-  });
+  const RawGalleryFiles: string[] = fs.readdirSync(galleryPath);
 
+  if (RawGalleryFiles.length === 0) {
+    return Promise.resolve<ProtocolResType>({
+      success: false,
+      message: "No gallery files found in the data/gallery folder",
+      data: null,
+    });
+  } else {
+    const galleryFiles: FileType[] = RawGalleryFiles.map((file) => {
+      return {
+        title: file,
+        filePath: path.join(galleryPath, file),
+        streamUrl: `media://${encodeURIComponent(file)}`,
+      };
+    }).filter((file) => {
+      const ext = path.extname(file.title).toLowerCase();
+      return ext === ".jpg" || ext === ".jpeg" || ext === ".png";
+    });
 
-  return Promise.resolve<ProtocolResType>({
-    success: true,
-    message: "Gallery files found",
-    data: galleryFiles,
-  });
+    return Promise.resolve<ProtocolResType>({
+      success: true,
+      message: "Gallery files found",
+      data: galleryFiles,
+    });
+  }
 }
 
-
 export async function ServeGalleryContent(request: Request) {
-
-  const filePath = decodeURIComponent(request.url.replace("media://", "").replace(/\/+$/, ""));
+  const filePath = decodeURIComponent(
+    request.url.replace("media://", "").replace(/\/+$/, ""),
+  );
   const fullPath = path.join(galleryPath, filePath);
 
   // Check if file exists

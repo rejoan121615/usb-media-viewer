@@ -5,20 +5,19 @@ import MediaCard from "../components/MediaCard";
 import DocumentModal from "../components/DocumentModal";
 import GlobalContext from "../context/GlobalContext";
 import useFuseSearch from "../hooks/useFuseSearch";
-
+import NotFound from "../components/NotFound";
 
 const Documents = () => {
   const { documents, searchQuery } = useContext(GlobalContext);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<FileType | null>(null);
-
-  const filteredDocuments = useFuseSearch<FileType>(
-    searchQuery,
-    documents,
-    { keys: ["title"], threshold: 0.3 }
+  const [selectedDocument, setSelectedDocument] = useState<FileType | null>(
+    null,
   );
 
-
+  const filteredDocuments = useFuseSearch<FileType>(searchQuery, documents, {
+    keys: ["title"],
+    threshold: 0.3,
+  });
 
   return (
     <Box>
@@ -33,20 +32,29 @@ const Documents = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {filteredDocuments?.map((document, index) => (
-          <Grid size={4} key={index}>
-            <MediaCard
-              handleClick={() => {
-                setSelectedDocument(document);
-                setModalOpen(true);
-              }}
-              mediaType="document"
-              thumbnail="/pdf-logo.png"
-              thumbnailAlt="Pdf Icon"
-              title={document.title}
+        {filteredDocuments?.length === 0 ? (
+          <Grid  size={12} >
+            <NotFound
+              title="Not Found"
+              description="No documents available in the data/documents folder."
             />
           </Grid>
-        ))}
+        ) : (
+          filteredDocuments?.map((document, index) => (
+            <Grid size={4} key={index}>
+              <MediaCard
+                handleClick={() => {
+                  setSelectedDocument(document);
+                  setModalOpen(true);
+                }}
+                mediaType="document"
+                thumbnail="/pdf-logo.png"
+                thumbnailAlt="Pdf Icon"
+                title={document.title}
+              />
+            </Grid>
+          ))
+        )}
       </Grid>
 
       {/* Document Player Modal */}

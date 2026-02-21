@@ -5,6 +5,7 @@ import MediaCard from "../components/MediaCard";
 import GalleryModal from "../components/GalleryModal";
 import GlobalContext from "../context/GlobalContext";
 import useFuseSearch from "../hooks/useFuseSearch";
+import NotFound from "../components/NotFound";
 
 const Gallery = () => {
   const { gallery, searchQuery } = useContext(GlobalContext);
@@ -39,17 +40,26 @@ const Gallery = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {filteredGallery?.map((item, index) => (
-          <Grid size={4} key={index}>
-            <MediaCard
-              title={item.title}
-              thumbnail={item.streamUrl}
-              thumbnailAlt={`${item.title} thumbnail`}
-              mediaType="gallery"
-              handleClick={() => handleImageClick(index)}
+        {filteredGallery?.length === 0 ? (
+          <Grid size={12}>
+            <NotFound
+              title="Not Found"
+              description="No images available in the data/gallery folder."
             />
           </Grid>
-        ))}
+        ) : (
+          filteredGallery?.map((item, index) => (
+            <Grid size={4} key={index}>
+              <MediaCard
+                title={item.title}
+                thumbnail={item.streamUrl}
+                thumbnailAlt={`${item.title} thumbnail`}
+                mediaType="gallery"
+                handleClick={() => handleImageClick(index)}
+              />
+            </Grid>
+          ))
+        )}
       </Grid>
 
       {/* Document Player Modal */}

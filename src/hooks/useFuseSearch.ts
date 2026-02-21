@@ -13,7 +13,7 @@ function useFuseSearch<T>(
 ): T[] {
   const fuse = useMemo(
     () =>
-      new Fuse(dataList, {
+      new Fuse(dataList || [], {
         keys: options.keys,
         threshold: options.threshold ?? 0.3,
       }),
