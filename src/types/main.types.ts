@@ -40,6 +40,9 @@ export interface GlobalContextType {
     videos: VideoDocumentType;
     documents: FileType[];
     gallery: FileType[];
+    searchQuery: string;
+    onSearchSubmit: (type: 'clear' | 'submit') => void;
+    searchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 

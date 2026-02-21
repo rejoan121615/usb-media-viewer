@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -10,23 +10,12 @@ import {
   Box,
 } from "@mui/material";
 import { MdClear, MdSearch } from 'react-icons/md'
+import GlobalContext from "../context/GlobalContext";
 
 
 const Searchbar = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const { searchQuery, onSearchSubmit, searchChange } = useContext(GlobalContext)
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-  };
-
-  const handleClearSearch = () => {
-    setSearchValue("");
-  };
-
-  const handleSearch = () => {
-    console.log("Searching for:", searchValue);
-    // Add your search logic here
-  };
 
   return (
     <>
@@ -49,24 +38,24 @@ const Searchbar = () => {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            handleSearch();
+            onSearchSubmit('submit');
           }}
         >
-          <IconButton sx={{ p: "10px" }} aria-label="search" onClick={handleSearch}>
+          <IconButton sx={{ p: "10px" }} aria-label="search" onClick={() => onSearchSubmit('submit')}>
             <MdSearch />
           </IconButton>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
             placeholder="Search files..."
             inputProps={{ "aria-label": "search files" }}
-            value={searchValue}
-            onChange={handleSearchChange}
+            value={searchQuery}
+            onChange={searchChange}
           />
-          {searchValue && (
+          {searchQuery && (
             <IconButton
               sx={{ p: "10px" }}
               aria-label="clear"
-              onClick={handleClearSearch}
+              onClick={() => onSearchSubmit('clear')}
             >
               <MdClear />
             </IconButton>

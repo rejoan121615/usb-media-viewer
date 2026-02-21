@@ -26,6 +26,7 @@ const Layout = () => {
   const [videos, setVideos] = useState<VideoDocumentType | null>(null);
   const [gallery, setGallery] = useState<FileType[] | null>(null);
   const [documents, setDocuments] = useState<FileType[] | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // fetch documents , gallery and videos data Here
   useEffect(() => {
@@ -91,6 +92,18 @@ const Layout = () => {
     }
   }, []);
 
+  const handleSearchSubmit = (type: 'clear' | 'submit') => {
+    if (type === 'clear') {
+      setSearchQuery("");
+    } else {
+      console.log("Search submitted for query:", searchQuery);
+    }
+  }
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -98,7 +111,10 @@ const Layout = () => {
         <GlobalContext.Provider value={{
           videos: videos,
           documents: documents,
-          gallery: gallery
+          gallery: gallery,
+          searchQuery: searchQuery,
+          onSearchSubmit: handleSearchSubmit,
+          searchChange: handleSearchChange
         }}>
           <SidebarLayout>
             <Routes>
