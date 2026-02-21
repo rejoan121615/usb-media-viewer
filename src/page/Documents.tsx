@@ -1,34 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Typography, Box, Grid, Paper } from "@mui/material";
 import { FileType } from "../types/main.types";
 import MediaCard from "../components/MediaCard";
 import DocumentModal from "../components/DocumentModal";
+import GlobalContext from "../context/GlobalContext";
+
 
 const Documents = () => {
-  const [documents, setDocuments] = useState<FileType[] | null>(null);
+  const { documents } = useContext(GlobalContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<FileType | null>(null);
 
-  useEffect(() => {
-    window.storageApi
-      .documentData()
-      .then((response) => {
-        console.log("Document data response:", response);
-        const { data, success, message } = response;
-        if (success && data) {
-          if (Array.isArray(data)) {
-            setDocuments(data);
-          }
 
-          // setVideoList(data.videoList);
-        } else {
-          console.log(message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching document tree:", error);
-      });
-  }, []);
 
   return (
     <Box>

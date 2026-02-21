@@ -34,3 +34,10 @@ export type ProtocolResType = {
 }
 
 export type IPCTypes = 'video-tree' | 'documents' | "gallery";
+
+
+export interface GlobalContextType {
+    videos: VideoDocumentType;
+    documents: FileType[];
+    gallery: FileType[];
+}

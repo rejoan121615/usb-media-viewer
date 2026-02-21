@@ -4,8 +4,8 @@ import { IoClose } from "react-icons/io5";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { FileType } from "../types/main.types";
 import { Document, Page, pdfjs } from "react-pdf";
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.mjs`;
 
@@ -23,10 +23,9 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(1);
   useEffect(() => {
-    console.log("Document in modal:", document);
-    // Reset to page 1 when a new document is opened
     if (document) {
-      setPageNumber(1);    }
+      setPageNumber(1);
+    }
   }, [document]);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
@@ -110,15 +109,15 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
 
         {/* pdf viewer */}
         {document && (
-          <Box 
+          <Box
             component={"div"}
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              maxHeight: '96vh',
-              overflow: 'auto',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              maxHeight: "96vh",
+              overflow: "auto",
             }}
           >
             <Document
@@ -129,21 +128,21 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
             </Document>
           </Box>
         )}
-        
+
         {/* Pagination Controls - Fixed at bottom */}
         {document && numPages && numPages > 1 && (
           <Box
             sx={{
-              position: 'absolute',
+              position: "absolute",
               bottom: 20,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              alignItems: 'center',
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              alignItems: "center",
               gap: 2,
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              padding: '10px 20px',
-              borderRadius: '8px',
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              padding: "10px 20px",
+              borderRadius: "8px",
               zIndex: 2,
               animation: "slideInFromBottom 0.4s ease-out",
               "@keyframes slideInFromBottom": {
@@ -162,34 +161,34 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
               onClick={goToPrevPage}
               disabled={pageNumber <= 1}
               sx={{
-                color: 'white',
-                '&:disabled': {
-                  color: 'rgba(255, 255, 255, 0.3)',
+                color: "white",
+                "&:disabled": {
+                  color: "rgba(255, 255, 255, 0.3)",
                 },
               }}
             >
               <MdNavigateBefore size={28} />
             </IconButton>
-            
+
             <Box
               sx={{
-                color: 'white',
-                fontSize: '16px',
+                color: "white",
+                fontSize: "16px",
                 fontWeight: 500,
-                minWidth: '120px',
-                textAlign: 'center',
+                minWidth: "120px",
+                textAlign: "center",
               }}
             >
               Page {pageNumber} of {numPages}
             </Box>
-            
+
             <IconButton
               onClick={goToNextPage}
               disabled={pageNumber >= (numPages || 1)}
               sx={{
-                color: 'white',
-                '&:disabled': {
-                  color: 'rgba(255, 255, 255, 0.3)',
+                color: "white",
+                "&:disabled": {
+                  color: "rgba(255, 255, 255, 0.3)",
                 },
               }}
             >

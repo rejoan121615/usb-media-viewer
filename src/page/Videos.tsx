@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Typography, Box, Grid } from "@mui/material";
 import MediaCard from "@/src/components/MediaCard";
 import VideoPlayerModal from "@/src/components/VideoPlayerModal";
 import {
   VideoFileType,
-  VideoDocumentType,
 } from "../types/main.types";
+import GlobalContext from "../context/GlobalContext";
+
 
 const Videos = () => {
-  const [videos, setVideos] = useState<VideoDocumentType | null>(null);
+  const { videos } = useContext(GlobalContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<VideoFileType | null>(
     null,
   );
 
-  useEffect(() => {
-    window.storageApi
-      .videoData()
-      .then((response) => {
-        const { data, success, message } = response;
-        if (success && data) {
-          console.log("Video tree data:", data);
-
-          if ("videoTree" in data && "videoList" in data) {
-            setVideos(data as VideoDocumentType);
-          }
-          // setVideoList(data.videoList);
-        } else {
-          console.log(message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching video tree:", error);
-      });
-  }, []);
 
   const handleVideoClick = (video: VideoFileType) => {
     console.log("Playing video:", video);
@@ -68,7 +49,7 @@ const Videos = () => {
               thumbnailAlt={`Thumbnail for ${video.title}`}
               mediaType="video"
               videoDuration={video.duration}
-              handleVideoClick={() => handleVideoClick(video)}
+              handleClick={() => handleVideoClick(video)}
             />
           </Grid>
         ))}

@@ -1,21 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import {
-  Box,
-  Drawer,
-  AppBar,
-  Toolbar,
-  List,
-  Typography,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-} from "@mui/material";
-import Logo from "@/public/logo.jpg";
+import React from "react";
+import { Box } from "@mui/material";
 import Navigation from "./Navigation";
 import Searchbar from "./Searchbar";
 
@@ -25,18 +9,11 @@ interface SidebarLayoutProps {
 }
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
-
-
-
-
-
   return (
     <Box sx={{ display: "flex" }}>
       {/* Sidebar Drawer */}
       <Navigation />
       {/* App Bar */}
-      
-
       {/* Main Content */}
       <Box
         component="main"
