@@ -102,6 +102,7 @@ const Layout = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    console.log("Search query updated:", event.target.value);
   }
 
   return (

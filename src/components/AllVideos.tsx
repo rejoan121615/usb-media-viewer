@@ -1,16 +1,23 @@
 import { Grid } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import MediaCard from './MediaCard'
 import GlobalContext from '../context/GlobalContext';
 import { VideoFileType } from '../types/main.types';
+import useFuseSearch from '../hooks/useFuseSearch';
 
 const AllVideos = ({handleVideoClick} : {handleVideoClick: (video: VideoFileType) => void}) => {
-  const { videos } = useContext(GlobalContext);
+  const { videos, searchQuery } = useContext(GlobalContext);
+
+  const filteredVideos = useFuseSearch<VideoFileType>(
+    searchQuery,
+    videos?.videoList ?? [],
+    { keys: ['title'], threshold: 0.3 }
+  );
 
 
   return (
      <Grid container spacing={3}>
-        {videos?.videoList.map((video, index) => (
+        {filteredVideos.map((video, index) => (
           <Grid size={4} key={index}>
             <MediaCard
               key={index}

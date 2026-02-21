@@ -14,7 +14,7 @@ const Videos = () => {
   const [selectedVideo, setSelectedVideo] = useState<VideoFileType | null>(
     null,
   );
-  const [currentWindow, setCurrentWindow] = useState<VideoWindowType>("chapter");
+  const [currentWindow, setCurrentWindow] = useState<VideoWindowType>("all");
 
   const handleVideoClick = (video: VideoFileType) => {
     console.log("Playing video:", video);

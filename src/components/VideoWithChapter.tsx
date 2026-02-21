@@ -1,20 +1,27 @@
 import React, { useContext } from "react";
-import { VideoFileType } from "../types/main.types";
+import { VideoFileType, VideoFolderTreeType } from "../types/main.types";
 import GlobalContext from "../context/GlobalContext";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import MediaCard from "./MediaCard";
 import VideoNotFound from "./VideoNotFound";
+import useFuseSearch from "../hooks/useFuseSearch";
 
 const VideoWithChapter = ({
   handleVideoClick,
 }: {
   handleVideoClick: (video: VideoFileType) => void;
 }) => {
-  const { videos } = useContext(GlobalContext);
+  const { videos, searchQuery } = useContext(GlobalContext);
+
+  const filteredChapters = useFuseSearch<VideoFolderTreeType>(
+    searchQuery,
+    videos?.videoTree ?? [],
+    { keys: ['folderName', 'videoFiles.title'], threshold: 0.3 }
+  );
 
   return (
     <Box>
-      {videos?.videoTree.map((chapter, index) => (
+      {filteredChapters.map((chapter, index) => (
         <Box
           key={index}
           sx={{
