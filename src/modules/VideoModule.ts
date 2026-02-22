@@ -17,53 +17,85 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
       fs.ensureDirSync(videoFolderPath);
     }
 
-    const chapterStructure = await fs.readdir(videoFolderPath);
+    const RootFilesAndFolders = await fs.readdir(videoFolderPath);
 
-    console.log("Chapter structure:", chapterStructure);
+    const FilesFromRoot: VideoFileType[] = await Promise.all(
+      RootFilesAndFolders.filter((item) =>
+        fs.statSync(path.join(videoFolderPath, item)).isFile(),
+      ).map(async (file) => {
 
-    if (chapterStructure.length === 0) {
+        const fullVideoPath = path.join(videoFolderPath, file);
+        const thumbnailPath = path.join(videoFolderPath, "thumbnails", `${path.parse(file).name}.jpg`);
 
+        const [duration] = await Promise.all([
+          GetVideoDuration(fullVideoPath),
+          fs.existsSync(thumbnailPath)
+            ? Promise.resolve()
+            : ThumbnailGenerator(fullVideoPath, thumbnailPath),
+        ]);
+
+        return {
+          title: file,
+          videoPath: fullVideoPath,
+          streamUrl: `media://${encodeURIComponent(file)}`,
+          thumbnail: `media://${encodeURIComponent(file)}?thumbnail=true`,
+          duration: duration,
+        };
+      }),
+    );
+
+    const FoldersFromRoot = RootFilesAndFolders.filter((item) =>
+      fs.statSync(path.join(videoFolderPath, item)).isDirectory(),
+    );
+
+    if (RootFilesAndFolders.length === 0) {
       return {
         success: false,
-        message: "No video files found in the directory",
+        message: `No video files found in the directory, current path: ${videoFolderPath}`,
         data: null,
       };
     }
 
     // get list of video files in each chapter folder and create video tree objects
     const videoTree: VideoFolderTreeType[] = await Promise.all(
-      chapterStructure.map(async (folderName) => {
+      FoldersFromRoot.map(async (folderName) => {
         const videoFiles = fs.readdirSync(
           path.join(videoFolderPath, folderName),
         );
 
-        // get each file object 
+        // get each file object
         let videoFileObjects = await Promise.all(
           videoFiles
-          .filter( (file) => file.endsWith(".mp4"))
-          .map(async (video) => {
+            .filter((file) => file.endsWith(".mp4"))
+            .map(async (video) => {
+              const fullVideoPath = path.join(
+                videoFolderPath,
+                folderName,
+                video,
+              );
+              const thumbnailPath = path.join(
+                videoFolderPath,
+                folderName,
+                "thumbnails",
+                `${path.parse(video).name}.jpg`,
+              );
 
+              const [duration] = await Promise.all([
+                GetVideoDuration(fullVideoPath),
+                fs.existsSync(thumbnailPath)
+                  ? Promise.resolve()
+                  : ThumbnailGenerator(fullVideoPath, thumbnailPath),
+              ]);
 
-            const fullVideoPath = path.join(videoFolderPath, folderName, video);
-            const thumbnailPath = path.join(videoFolderPath, folderName, "thumbnails", `${path.parse(video).name}.jpg`);
-
-
-            const [duration] = await Promise.all([
-              GetVideoDuration(fullVideoPath),
-              fs.existsSync (thumbnailPath) ? Promise.resolve() : ThumbnailGenerator(fullVideoPath, thumbnailPath),
-            ]);
-
-            return {
-              title: video,
-              videoPath: fullVideoPath,
-              streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
-              thumbnail: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}?thumbnail=true`,
-              duration: duration, // Placeholder, you can update this with actual duration if available
-            };
-          })
+              return {
+                title: video,
+                videoPath: fullVideoPath,
+                streamUrl: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}`,
+                thumbnail: `media://${encodeURIComponent(folderName)}/${encodeURIComponent(video)}?thumbnail=true`,
+                duration: duration, // Placeholder, you can update this with actual duration if available
+              };
+            }),
         );
-        
-
 
         return {
           folderName: folderName,
@@ -72,22 +104,20 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
       }),
     );
 
-    console.log("Video tree:", videoTree);
-
     // get all the videos as an array of video file objects
     const allVideos = videoTree.reduce((acc: any[], folder) => {
       return [...acc, ...folder.videoFiles];
     }, []);
 
-
-    console.log("All videos:", allVideos);
-
     return {
       success: true,
       message: "Video files found",
       data: {
-        videoTree,
-        videoList: allVideos,
+        videoTree: [
+          { folderName: "In The main folder", videoFiles: FilesFromRoot },
+          ...videoTree,
+        ],
+        videoList: [...FilesFromRoot, ...allVideos],
       },
     };
   } catch (error) {
@@ -153,6 +183,32 @@ export async function ServeThumbnailContent(request: Request) {
   const fileName = decodeURIComponent(
     path.parse(pathname.replace(/\/+$/, "")).name,
   );
+
+if (folderName.endsWith(".mp4")) {
+
+  const folderNameAsFile =  decodeURIComponent(
+    path.parse(folderName.replace(/\/+$/, "")).name,
+  );
+
+  const thumbnailPath = path.join(
+    videoFolderPath,
+    "thumbnails",
+    `${folderNameAsFile}.jpg`,
+  );
+  const fileStream = fs.createReadStream(thumbnailPath);
+
+    return new Response(fileStream as any, {
+      status: 200,
+      headers: {
+        "Content-Type":
+          mime.lookup(thumbnailPath) || "application/octet-stream",
+        "Content-Length": fs.statSync(thumbnailPath).size.toString(),
+        "Accept-Ranges": "bytes",
+      },
+    });
+}
+
+
   const thumbnailPath = path.join(
     videoFolderPath,
     folderName,
