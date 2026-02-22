@@ -2,9 +2,32 @@ import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
 import fs from "fs-extra";
+import { app } from "electron";
 import { VideoDuration } from "../types/main.types";
-const require = createRequire(import.meta.url);
-const ffmpegPath: string = require("ffmpeg-static");
+
+const _require = createRequire(import.meta.url);
+
+/**
+ * Resolve the ffmpeg binary path.
+ * - In development: use ffmpeg-static directly.
+ * - In production (packaged): ffmpeg-static is unpacked from the asar into
+ *   app.asar.unpacked/node_modules/ffmpeg-static/, so we build the path manually.
+ */
+function getFfmpegPath(): string {
+  if (app.isPackaged) {
+    const ext = process.platform === "win32" ? ".exe" : "";
+    return path.join(
+      process.resourcesPath,
+      "app.asar.unpacked",
+      "node_modules",
+      "ffmpeg-static",
+      `ffmpeg${ext}`
+    );
+  }
+  return _require("ffmpeg-static") as string;
+}
+
+const ffmpegPath: string = getFfmpegPath();
 
 export async function ThumbnailGenerator(
   videoPath: string,

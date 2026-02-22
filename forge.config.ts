@@ -10,8 +10,11 @@ import MakerPortable from "@rabbitholesyndrome/electron-forge-maker-portable";
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
-    extraResource: ["node_modules/ffmpeg-static"],
+    // asar.unpack extracts matching paths alongside app.asar as app.asar.unpacked/
+    // so native binaries (like ffmpeg) can actually be executed at runtime.
+    asar: {
+      unpack: "**/node_modules/ffmpeg-static/**",
+    },
   },
   rebuildConfig: {},
   makers: [
