@@ -17,7 +17,6 @@ const Videos = () => {
   const [currentWindow, setCurrentWindow] = useState<VideoWindowType>("all");
 
   const handleVideoClick = (video: VideoFileType) => {
-    console.log("Playing video:", video);
     setSelectedVideo(video);
     setModalOpen(true);
   };

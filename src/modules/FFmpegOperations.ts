@@ -11,8 +11,6 @@ export async function ThumbnailGenerator(
   thumbnailPath: string,
 ): Promise<string> {
 
-  console.log('generate thumbnail for -------------------------------------------- ', videoPath);
-
   await fs.ensureDir(path.dirname(thumbnailPath));
 
   return new Promise((resolve, reject) => {

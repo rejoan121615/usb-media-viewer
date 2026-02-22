@@ -37,12 +37,9 @@ const Layout = () => {
         .then((response) => {
           const { data, success, message } = response;
           if (success && data) {
-            console.log("Video tree data:", data);
             if ("videoTree" in data && "videoList" in data) {
               setVideos(data as VideoDocumentType);
             }
-          } else {
-            console.log(message);
           }
         })
         .catch((error) => {
@@ -53,18 +50,12 @@ const Layout = () => {
       window.storageApi
         .galleryData()
         .then((response) => {
-          console.log("Gallery data response:", response);
-
           const { data, success, message } = response;
           if (success && data) {
             if (Array.isArray(data)) {
               setGallery(data);
             }
-
-            // setVideoList(data.videoList);
-          } else {
-            console.log(message);
-          }
+          } 
         })
         .catch((error) => {
           console.error("Error fetching document tree:", error);
@@ -74,17 +65,12 @@ const Layout = () => {
       window.storageApi
         .documentData()
         .then((response) => {
-          console.log("Document data response:", response);
           const { data, success, message } = response;
           if (success && data) {
             if (Array.isArray(data)) {
               setDocuments(data);
             }
-
-            // setVideoList(data.videoList);
-          } else {
-            console.log(message);
-          }
+          } 
         })
         .catch((error) => {
           console.error("Error fetching document tree:", error);
@@ -95,14 +81,11 @@ const Layout = () => {
   const handleSearchSubmit = (type: 'clear' | 'submit') => {
     if (type === 'clear') {
       setSearchQuery("");
-    } else {
-      console.log("Search submitted for query:", searchQuery);
     }
   }
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-    console.log("Search query updated:", event.target.value);
   }
 
   return (
