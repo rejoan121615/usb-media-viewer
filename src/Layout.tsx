@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate, useNavigation } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { SidebarLayout } from "@/src/components/Sidebar";
 import Videos from "./page/Videos";
@@ -23,9 +23,9 @@ const theme = createTheme({
 });
 
 const Layout = () => {
-  const [videos, setVideos] = useState<VideoDocumentType>({ videoTree: [], videoList: [] });
-  const [gallery, setGallery] = useState<FileType[]>([]);
-  const [documents, setDocuments] = useState<FileType[]>([]);
+  const [videos, setVideos] = useState<VideoDocumentType | null>(null);
+  const [gallery, setGallery] = useState<FileType[] | null>(null);
+  const [documents, setDocuments] = useState<FileType[] | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // fetch documents , gallery and videos data Here
@@ -40,6 +40,8 @@ const Layout = () => {
             if ("videoTree" in data && "videoList" in data) {
               setVideos(data as VideoDocumentType);
             }
+          } else {
+            setVideos({ videoTree: [], videoList: [] });
           }
         })
         .catch((error) => {
@@ -54,8 +56,12 @@ const Layout = () => {
           if (success && data) {
             if (Array.isArray(data)) {
               setGallery(data);
+            } else {
+              setGallery([]);
             }
-          } 
+          } else {
+            setGallery([]);
+          }
         })
         .catch((error) => {
           console.error("Error fetching document tree:", error);
@@ -69,8 +75,12 @@ const Layout = () => {
           if (success && data) {
             if (Array.isArray(data)) {
               setDocuments(data);
+            } else {
+              setDocuments([]);
             }
-          } 
+          } else {
+            setDocuments([]);
+          }
         })
         .catch((error) => {
           console.error("Error fetching document tree:", error);
@@ -78,28 +88,30 @@ const Layout = () => {
     }
   }, []);
 
-  const handleSearchSubmit = (type: 'clear' | 'submit') => {
-    if (type === 'clear') {
+  const handleSearchSubmit = (type: "clear" | "submit") => {
+    if (type === "clear") {
       setSearchQuery("");
     }
-  }
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <HashRouter>
-        <GlobalContext.Provider value={{
-          videos: videos,
-          documents: documents,
-          gallery: gallery,
-          searchQuery: searchQuery,
-          onSearchSubmit: handleSearchSubmit,
-          searchChange: handleSearchChange
-        }}>
+        <GlobalContext.Provider
+          value={{
+            videos: videos,
+            documents: documents,
+            gallery: gallery,
+            searchQuery: searchQuery,
+            onSearchSubmit: handleSearchSubmit,
+            searchChange: handleSearchChange,
+          }}
+        >
           <SidebarLayout>
             <Routes>
               <Route path="/" element={<Navigate to="/videos" replace />} />

@@ -1,15 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Typography, Box, Grid } from "@mui/material";
-import MediaCard from "@/src/components/MediaCard";
+import React, { useState } from "react";
+import { Box } from "@mui/material";
 import VideoPlayerModal from "@/src/components/VideoPlayerModal";
 import { VideoFileType, VideoWindowType } from "../types/main.types";
-import GlobalContext from "../context/GlobalContext";
 import VideosNavbar from "../components/VideosNavbar";
 import AllVideos from "../components/AllVideos";
 import VideoWithChapter from "../components/VideoWithChapter";
 
 const Videos = () => {
-  const { videos } = useContext(GlobalContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<VideoFileType | null>(
     null,

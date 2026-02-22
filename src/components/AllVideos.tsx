@@ -5,6 +5,8 @@ import GlobalContext from "../context/GlobalContext";
 import { VideoFileType } from "../types/main.types";
 import useFuseSearch from "../hooks/useFuseSearch";
 import NotFound from "./NotFound";
+import { Thumbnail } from "react-pdf";
+import ThumbnailGenerating from "./ThumbnailGenerating";
 
 const AllVideos = ({
   handleVideoClick,
@@ -21,7 +23,11 @@ const AllVideos = ({
 
   return (
     <Grid container spacing={3}>
-      {filteredVideos.length === 0 ? (
+      { videos === null ? (
+        <Grid size={12}>
+          <ThumbnailGenerating />
+        </Grid>
+      ) : filteredVideos.length === 0 ? (
         <Grid size={12}>
           <NotFound
             title="Not Found"
