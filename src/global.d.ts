@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import type { ProtocolResType } from "./types/main.types";
 
 declare module '*.css';

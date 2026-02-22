@@ -51,7 +51,7 @@ const Navigation: React.FC = () => {
       <Toolbar sx={{ height: "70px" }}>
         <Stack component={"div"} direction={"row"} alignItems={"center"}>
           <img
-            src="/logo.jpg"
+            src={`${import.meta.env.BASE_URL}logo.jpg`}
             alt="Logo"
             style={{ width: "50px", height: "auto" }}
           />

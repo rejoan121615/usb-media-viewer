@@ -1,10 +1,8 @@
-import { app, BrowserWindow, ipcMain, protocol } from "electron";
+import { app, BrowserWindow, ipcMain, protocol, Menu } from "electron";
 import path from "path";
 import started from "electron-squirrel-startup";
-import { FetchVideoFiles, ServeVideoContent } from "./modules/VideoModule";
+import { FetchVideoFiles } from "./modules/VideoModule";
 import { IPCTypes } from "./types/main.types";
-import { pathToFileURL } from "url";
-import fs from "fs";
 import { FetchDocumentFiles } from "./modules/DocumentModule";
 import { FetchGalleryFiles } from "./modules/GalleryModule";
 import { ProtocolRequestHandler } from "./modules/ProtocolHandler";
@@ -15,12 +13,16 @@ if (started) {
 }
 
 const createWindow = () => {
+  // Remove the native menu bar (File, Edit, View, Window, Help) in all environments.
+  Menu.setApplicationMenu(null);
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     minWidth: 800,
     minHeight: 600,
+    autoHideMenuBar: true,   // extra safety: hides menu bar if somehow set
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },

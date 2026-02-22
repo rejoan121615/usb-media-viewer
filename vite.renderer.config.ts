@@ -8,6 +8,12 @@ export default defineConfig(async () => {
 
   return {
     // plugins: [tailwindcss.default()],
+
+    // IMPORTANT for Electron: use relative base so asset paths work
+    // with the file:// protocol used in packaged apps (loadFile).
+    // Without this, /logo.jpg resolves to C:/logo.jpg instead of the app dir.
+    base: "./",
+
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),
