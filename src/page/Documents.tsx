@@ -41,7 +41,7 @@ const Documents = () => {
           </Grid>
         ) : (
           filteredDocuments?.map((document, index) => (
-            <Grid size={4} key={index}>
+            <Grid size={{xs: 6, md: 4, xl: 3}} key={index}>
               <MediaCard
                 handleClick={() => {
                   setSelectedDocument(document);

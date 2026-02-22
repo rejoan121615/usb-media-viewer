@@ -48,7 +48,7 @@ const VideoWithChapter = ({
             ) : (
               <Grid container spacing={3} sx={{ p: 3 }}>
                 {chapter.videoFiles.map((video, videoIndex) => (
-                  <Grid size={4} key={videoIndex}>
+                  <Grid size={{xs: 6, md: 4, xl: 3}} key={videoIndex}>
                     <MediaCard
                       key={videoIndex}
                       title={video.title}

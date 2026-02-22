@@ -36,7 +36,7 @@ const AllVideos = ({
         </Grid>
       ) : (
         filteredVideos.map((video, index) => (
-          <Grid size={4} key={index}>
+          <Grid size={{xs: 6, md: 4, xl: 3}} key={index}>
             <MediaCard
               key={index}
               title={video.title}

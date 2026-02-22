@@ -49,7 +49,7 @@ const Gallery = () => {
           </Grid>
         ) : (
           filteredGallery?.map((item, index) => (
-            <Grid size={4} key={index}>
+            <Grid size={{xs: 6, md: 4, xl: 3}} key={index}>
               <MediaCard
                 title={item.title}
                 thumbnail={item.streamUrl}
