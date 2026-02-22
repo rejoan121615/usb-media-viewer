@@ -10,19 +10,14 @@ const _require = createRequire(import.meta.url);
 /**
  * Resolve the ffmpeg binary path.
  * - In development: use ffmpeg-static directly.
- * - In production (packaged): ffmpeg-static is unpacked from the asar into
- *   app.asar.unpacked/node_modules/ffmpeg-static/, so we build the path manually.
+ * - In production (packaged): ffmpeg is copied via extraResources into
+ *   resources/ (process.resourcesPath), so it lives outside the asar and
+ *   can actually be executed.
  */
 function getFfmpegPath(): string {
   if (app.isPackaged) {
     const ext = process.platform === "win32" ? ".exe" : "";
-    return path.join(
-      process.resourcesPath,
-      "app.asar.unpacked",
-      "node_modules",
-      "ffmpeg-static",
-      `ffmpeg${ext}`
-    );
+    return path.join(process.resourcesPath, "ffmpeg-static", `ffmpeg${ext}`);
   }
   return _require("ffmpeg-static") as string;
 }
