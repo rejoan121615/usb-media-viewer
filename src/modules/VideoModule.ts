@@ -19,7 +19,10 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
 
     const chapterStructure = await fs.readdir(videoFolderPath);
 
+    console.log("Chapter structure:", chapterStructure);
+
     if (chapterStructure.length === 0) {
+
       return {
         success: false,
         message: "No video files found in the directory",
@@ -69,10 +72,15 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
       }),
     );
 
+    console.log("Video tree:", videoTree);
+
     // get all the videos as an array of video file objects
     const allVideos = videoTree.reduce((acc: any[], folder) => {
       return [...acc, ...folder.videoFiles];
     }, []);
+
+
+    console.log("All videos:", allVideos);
 
     return {
       success: true,
@@ -85,7 +93,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
   } catch (error) {
     return {
       success: false,
-      message: "An error occurred while reading video files",
+      message: `An error occurred while reading video files: ${error}`,
       data: null,
     };
   }

@@ -14,7 +14,7 @@ if (started) {
 
 const createWindow = () => {
   // Remove the native menu bar (File, Edit, View, Window, Help) in all environments.
-  Menu.setApplicationMenu(null);
+  // Menu.setApplicationMenu(null);
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -22,7 +22,7 @@ const createWindow = () => {
     height: 600,
     minWidth: 800,
     minHeight: 600,
-    autoHideMenuBar: true,   // extra safety: hides menu bar if somehow set
+    // autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },

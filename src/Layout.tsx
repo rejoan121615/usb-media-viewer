@@ -31,10 +31,12 @@ const Layout = () => {
   // fetch documents , gallery and videos data Here
   useEffect(() => {
     if (window.storageApi) {
+      console.log("Storage API is available, fetching data...");
       // update videos list in global context
       window.storageApi
         .videoData()
         .then((response) => {
+          console.log("Video data response:", response);
           const { data, success, message } = response;
           if (success && data) {
             if ("videoTree" in data && "videoList" in data) {

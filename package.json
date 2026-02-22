@@ -1,8 +1,8 @@
 {
-  "name": "my-new-app",
-  "productName": "my-new-app",
+  "name": "usb-media-viewer",
+  "productName": "Usb Media Viewer",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "A simple app to view image, video and pdf files from usb drive.",
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
-  "keywords": [],
+  "keywords": ["usb", "media", "viewer", "image", "video", "pdf"],
   "author": {
     "name": "Mohd Rejoan",
     "email": "wearecrx@gmail.com"
