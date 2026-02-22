@@ -14,11 +14,7 @@ const videoFolderPath = path.join(USBPath, "..", "data", "videos");
 export async function FetchVideoFiles(): Promise<ProtocolResType> {
   try {
     if (!fs.existsSync(videoFolderPath)) {
-      return {
-        success: false,
-        message: "Video files path does not exist",
-        data: null,
-      };
+      fs.ensureDirSync(videoFolderPath);
     }
 
     const chapterStructure = await fs.readdir(videoFolderPath);
