@@ -2,7 +2,30 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Video Library</title>
+    <!--
+      Content Security Policy for Electron + Vite + React + MUI
+      - script-src 'self': only load scripts from our own origin (no eval)
+      - style-src 'self' 'unsafe-inline': MUI injects inline styles at runtime
+      - img-src 'self' data: blob: media:: allow local images + media:// protocol thumbnails
+      - media-src 'self' blob: media:: allow video/audio streaming via custom media:// protocol
+      - connect-src 'self' ws: wss:: allow Vite HMR websocket in development
+      - font-src 'self' data:: allow embedded Roboto fonts
+      - object-src 'none': disallow plugins (Flash etc.)
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: blob: media:;
+        media-src 'self' blob: media:;
+        connect-src 'self' ws: wss:;
+        font-src 'self' data:;
+        object-src 'none';
+      "
+    />
   </head>
   <body>
     <div id="root"></div>

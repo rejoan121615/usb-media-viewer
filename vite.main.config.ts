@@ -4,12 +4,11 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   build: {
     rollupOptions: {
-      // Externalize native/binary modules so Vite doesn't bundle them into main.js.
-      // They will be required at runtime from node_modules (or asar.unpacked).
+      // Only externalize ffmpeg-static because it resolves to a native binary path
+      // that must be read from the filesystem (not bundled into the JS output).
+      // Pure JS modules like fs-extra and mime-types are bundled normally by Vite.
       external: [
         'ffmpeg-static',
-        'fs-extra',
-        'mime-types',
       ],
     },
   },

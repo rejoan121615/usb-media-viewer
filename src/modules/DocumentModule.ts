@@ -43,6 +43,7 @@ export function FetchDocumentFiles(): Promise<ProtocolResType> {
 }
 
 export async function ServeDocumentContent(request: Request) {
+  console.log('recived request for document content:', request.url);
   const filePath = decodeURIComponent(
     request.url.replace("media://", "").replace(/\/+$/, ""),
   );
