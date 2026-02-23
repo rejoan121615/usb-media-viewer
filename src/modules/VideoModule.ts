@@ -23,9 +23,12 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
       RootFilesAndFolders.filter((item) =>
         fs.statSync(path.join(videoFolderPath, item)).isFile(),
       ).map(async (file) => {
-
         const fullVideoPath = path.join(videoFolderPath, file);
-        const thumbnailPath = path.join(videoFolderPath, "thumbnails", `${path.parse(file).name}.jpg`);
+        const thumbnailPath = path.join(
+          videoFolderPath,
+          "thumbnails",
+          `${path.parse(file).name}.jpg`,
+        );
 
         const [duration] = await Promise.all([
           GetVideoDuration(fullVideoPath),
@@ -44,9 +47,13 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
       }),
     );
 
-    const FoldersFromRoot = RootFilesAndFolders.filter((item) =>
-      fs.statSync(path.join(videoFolderPath, item)).isDirectory(),
-    );
+    const FoldersFromRoot = RootFilesAndFolders.filter((item) => {
+      if (item.toLowerCase() === "thumbnails") {
+        return false; // Exclude the thumbnails folder
+      } else {
+        return fs.statSync(path.join(videoFolderPath, item)).isDirectory();
+      }
+    });
 
     if (RootFilesAndFolders.length === 0) {
       return {
@@ -114,8 +121,11 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
       message: "Video files found",
       data: {
         videoTree: [
-          { folderName: "In The main folder", videoFiles: FilesFromRoot },
           ...videoTree,
+          {
+            folderName: "Root (These videos are in the main folder)",
+            videoFiles: FilesFromRoot,
+          },
         ],
         videoList: [...FilesFromRoot, ...allVideos],
       },
@@ -184,18 +194,17 @@ export async function ServeThumbnailContent(request: Request) {
     path.parse(pathname.replace(/\/+$/, "")).name,
   );
 
-if (folderName.endsWith(".mp4")) {
+  if (folderName.endsWith(".mp4")) {
+    const folderNameAsFile = decodeURIComponent(
+      path.parse(folderName.replace(/\/+$/, "")).name,
+    );
 
-  const folderNameAsFile =  decodeURIComponent(
-    path.parse(folderName.replace(/\/+$/, "")).name,
-  );
-
-  const thumbnailPath = path.join(
-    videoFolderPath,
-    "thumbnails",
-    `${folderNameAsFile}.jpg`,
-  );
-  const fileStream = fs.createReadStream(thumbnailPath);
+    const thumbnailPath = path.join(
+      videoFolderPath,
+      "thumbnails",
+      `${folderNameAsFile}.jpg`,
+    );
+    const fileStream = fs.createReadStream(thumbnailPath);
 
     return new Response(fileStream as any, {
       status: 200,
@@ -206,8 +215,7 @@ if (folderName.endsWith(".mp4")) {
         "Accept-Ranges": "bytes",
       },
     });
-}
-
+  }
 
   const thumbnailPath = path.join(
     videoFolderPath,
