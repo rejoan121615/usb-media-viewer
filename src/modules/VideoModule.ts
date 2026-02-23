@@ -11,6 +11,9 @@ import { GetVideoDuration, ThumbnailGenerator } from "./FFmpegOperations";
 const USBPath = process.cwd();
 const videoFolderPath = path.join(USBPath, "..", "data", "videos");
 
+console.log('Video folder path:', videoFolderPath);
+console.log('usb folder path:', USBPath);
+
 export async function FetchVideoFiles(): Promise<ProtocolResType> {
   try {
     if (!fs.existsSync(videoFolderPath)) {
