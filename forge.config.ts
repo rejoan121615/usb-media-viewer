@@ -15,24 +15,11 @@ const config: ForgeConfig = {
     asar: {
       unpack: "**/node_modules/ffmpeg-static/**",
     },
-    extraResource: [
-      './node_modules/ffmpeg-static',
-    ]
-    
-    // extraResources explicitly copies the ffmpeg binary into resources/ (outside the asar)
-    // so it is always accessible at process.resourcesPath regardless of pnpm/asar quirks.
-    // extraResources: [
-    //   {
-    //     from: `./node_modules/ffmpeg-static/ffmpeg${process.platform === "win32" ? ".exe" : ""}`,
-    //     to: ".",
-    //   },
-    // ],
+    extraResource: ["./node_modules/ffmpeg-static"],
   },
   rebuildConfig: {},
   makers: [
-    new MakerPortable({
-      artifactName: "${productName}-portable-${version}.exe",
-    }),
+    new MakerZIP({}, ["darwin", "win32", "linux"]),
   ],
   plugins: [
     new VitePlugin({
