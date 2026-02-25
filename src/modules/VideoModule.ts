@@ -7,12 +7,8 @@ import {
 } from "../types/main.types";
 import mime from "mime-types";
 import { GetVideoDuration, ThumbnailGenerator } from "./FFmpegOperations";
-
-const USBPath = process.cwd();
-const videoFolderPath = path.join(USBPath, "..", "data", "videos");
-
-console.log('Video folder path:', videoFolderPath);
-console.log('usb folder path:', USBPath);
+import { app } from "electron";
+import { videoFolderPath, USBRootPath } from "../utils/PathList";
 
 export async function FetchVideoFiles(): Promise<ProtocolResType> {
   try {
@@ -61,7 +57,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
     if (RootFilesAndFolders.length === 0) {
       return {
         success: false,
-        message: `No video files found in the directory, current path: ${videoFolderPath}`,
+        message: `No video files found in the directory, current path: ${USBRootPath()}`,
         data: null,
       };
     }

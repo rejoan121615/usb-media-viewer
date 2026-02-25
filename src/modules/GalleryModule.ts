@@ -2,18 +2,16 @@ import path from "path";
 import { FileType, ProtocolResType } from "../types/main.types";
 import fs from "fs-extra";
 import mime from "mime-types";
-
-const USBDrive = process.cwd();
-const galleryPath = path.join(USBDrive, "..", "data", "gallery");
+import { USBRootPath, galleryFolderPath } from '../utils/PathList'
 
 export function FetchGalleryFiles(): Promise<ProtocolResType> {
   // if path not exist, return error message
-  if (!fs.existsSync(galleryPath)) {
-    fs.ensureDirSync(galleryPath);
+  if (!fs.existsSync(galleryFolderPath)) {
+    fs.ensureDirSync(galleryFolderPath);
   }
 
   // read all files in the gallery directory and return an array of file paths
-  const RawGalleryFiles: string[] = fs.readdirSync(galleryPath);
+  const RawGalleryFiles: string[] = fs.readdirSync(galleryFolderPath);
 
   if (RawGalleryFiles.length === 0) {
     return Promise.resolve<ProtocolResType>({
@@ -25,7 +23,7 @@ export function FetchGalleryFiles(): Promise<ProtocolResType> {
     const galleryFiles: FileType[] = RawGalleryFiles.map((file) => {
       return {
         title: file,
-        filePath: path.join(galleryPath, file),
+        filePath: path.join(galleryFolderPath, file),
         streamUrl: `media://${encodeURIComponent(file)}`,
       };
     }).filter((file) => {
@@ -45,7 +43,7 @@ export async function ServeGalleryContent(request: Request) {
   const filePath = decodeURIComponent(
     request.url.replace("media://", "").replace(/\/+$/, ""),
   );
-  const fullPath = path.join(galleryPath, filePath);
+  const fullPath = path.join(galleryFolderPath, filePath);
 
   // Check if file exists
   if (!fs.existsSync(fullPath)) {

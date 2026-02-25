@@ -2,18 +2,17 @@ import path from "path";
 import { FileType, ProtocolResType } from "../types/main.types";
 import fs from "fs-extra";
 import mime from "mime-types";
+import { USBRootPath, documentFolderPath } from '../utils/PathList'
 
-const USBDrive = process.cwd();
-const documentsPath = path.join(USBDrive, "..", "data", "documents");
 
 export function FetchDocumentFiles(): Promise<ProtocolResType> {
   // if path not exist, return error message
-  if (!fs.existsSync(documentsPath)) {
-    fs.ensureDirSync(documentsPath);
+  if (!fs.existsSync(documentFolderPath)) {
+    fs.ensureDirSync(documentFolderPath);
   }
 
   // read all files in the documents directory and return an array of file paths
-  const rawFiles: string[] = fs.readdirSync(documentsPath);
+  const rawFiles: string[] = fs.readdirSync(documentFolderPath);
 
   if (rawFiles.length === 0) {
     return Promise.resolve<ProtocolResType>({
@@ -26,7 +25,7 @@ export function FetchDocumentFiles(): Promise<ProtocolResType> {
       .map((file) => {
         return {
           title: file,
-          filePath: path.join(documentsPath, file),
+          filePath: path.join(documentFolderPath, file),
           streamUrl: `media://${encodeURIComponent(file)}`,
         };
       })
@@ -46,7 +45,7 @@ export async function ServeDocumentContent(request: Request) {
   const filePath = decodeURIComponent(
     request.url.replace("media://", "").replace(/\/+$/, ""),
   );
-  const fullPath = path.join(documentsPath, filePath);
+  const fullPath = path.join(documentFolderPath, filePath);
 
   // Check if file exists
   if (!fs.existsSync(fullPath)) {

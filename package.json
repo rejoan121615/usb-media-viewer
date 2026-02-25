@@ -12,7 +12,14 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
-  "keywords": ["usb", "media", "viewer", "image", "video", "pdf"],
+  "keywords": [
+    "usb",
+    "media",
+    "viewer",
+    "image",
+    "video",
+    "pdf"
+  ],
   "author": {
     "name": "Mohd Rejoan",
     "email": "wearecrx@gmail.com"
@@ -68,6 +75,7 @@
     "react-icons": "^5.5.0",
     "react-pdf": "^10.3.0",
     "react-router-dom": "^7.13.0",
+    "winston": "^3.19.0",
     "yet-another-react-lightbox": "^3.29.1"
   }
 }
