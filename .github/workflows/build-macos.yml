@@ -1,4 +1,4 @@
-name: Build macOS App
+name: Build Portable Apps
 
 on:
   workflow_dispatch:
@@ -6,19 +6,70 @@ on:
     branches: [ main ]
 
 jobs:
-  build-macos:
+  build-macos-intel:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
       - run: pnpm install
       - run: pnpm exec electron-forge make --platform=darwin --arch=x64
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-builds
-          path: out/make/zip/darwin/**
+          name: macos-intel-portable
+          path: out/make/zip/darwin/x64/**
+
+  build-macos-m1:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install
+      - run: pnpm exec electron-forge make --platform=darwin --arch=arm64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-m1-portable
+          path: out/make/zip/darwin/arm64/**
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install
+      - run: pnpm exec electron-forge make --platform=win32 --arch=x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-portable
+          path: out/make/zip/win32/x64/**
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: pnpm install
+      - run: pnpm exec electron-forge make --platform=linux --arch=x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-portable
+          path: out/make/zip/linux/x64/**
