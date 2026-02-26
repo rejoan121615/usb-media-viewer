@@ -14,7 +14,9 @@ if (started) {
 
 const createWindow = () => {
   // Remove the native menu bar (File, Edit, View, Window, Help) in all environments.
-  // Menu.setApplicationMenu(null);
+  if (app.isPackaged) {
+    Menu.setApplicationMenu(null);
+  }
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -22,7 +24,7 @@ const createWindow = () => {
     height: 600,
     minWidth: 800,
     minHeight: 600,
-    // autoHideMenuBar: true,
+    autoHideMenuBar: app.isPackaged ?  true : false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -38,7 +40,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (!app.isPackaged) mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
