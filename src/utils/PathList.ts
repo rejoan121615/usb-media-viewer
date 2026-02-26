@@ -6,7 +6,7 @@ export const USBRootPath = (): string => {
     if (process.platform === "darwin") {
       return path.join(process.execPath, "..", "..", "..","..");
     } else {
-      return process.cwd();
+      return path.join(process.execPath, "..", "..", "..","..", "..");
     }
   } else {
     return process.cwd();

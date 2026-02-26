@@ -3,7 +3,7 @@ name: Build Portable Apps
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ build ]
 
 jobs:
   build-macos-intel:
