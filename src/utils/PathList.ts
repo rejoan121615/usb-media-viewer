@@ -4,7 +4,7 @@ import path from "path";
 export const USBRootPath = (): string => {
   if (app.isPackaged) {
     if (process.platform === "darwin") {
-      return path.join(process.execPath, "..", "..", "..","..");
+      return path.join(process.execPath, "..", "..", "..","..","..");
     } else if (process.platform === "linux") {
       return path.join(process.execPath, "..", "..");
     } else {
