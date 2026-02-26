@@ -132,7 +132,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred while reading video files: ${error}`,
+      message: `An error occurred while reading video files: ${error}, current path: ${process.execPath}`,
       data: null,
     };
   }
