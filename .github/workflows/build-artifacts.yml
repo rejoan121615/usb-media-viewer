@@ -3,6 +3,8 @@ name: Build Portable Apps
 on:
   workflow_dispatch:
   push:
+    tags:
+      - 'v*.*.*'        # Trigger on version tags like v1.0.0
     branches: [ build ]
 
 jobs:
@@ -73,3 +75,52 @@ jobs:
         with:
           name: linux-portable
           path: out/make/zip/linux/x64/**
+
+  release:
+    needs: [build-macos-intel, build-macos-m1, build-windows, build-linux]  # Runs only after ALL builds succeed
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Required to create releases
+    steps:
+      - uses: actions/checkout@v4
+
+      # Download all artifacts from previous jobs
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-intel-portable
+          path: artifacts/macos-intel
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-m1-portable
+          path: artifacts/macos-m1
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-portable
+          path: artifacts/windows
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-portable
+          path: artifacts/linux
+
+      # Get version from package.json
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      # Create GitHub Release and upload all artifacts
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true   # Auto-generates changelog from commits
+          files: |
+            artifacts/macos-intel/**
+            artifacts/macos-m1/**
+            artifacts/windows/**
+            artifacts/linux/**
