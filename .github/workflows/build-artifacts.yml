@@ -78,7 +78,7 @@ jobs:
           $VERSION = node -p "require('./package.json').version"
           New-Item -ItemType Directory -Force -Path renamed
           $file = Get-ChildItem -Path "out/make/zip/win32/x64/*.zip" | Select-Object -First 1
-          Move-Item $file.FullName "renamed/Usb.Media.Viewer-win32-x64-$VERSION.zip"
+          Move-Item $file.FullName "renamed/Usb.Media.Viewer-windows-$VERSION.zip"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -103,7 +103,7 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           mkdir -p renamed
-          mv out/make/zip/linux/x64/*.zip "renamed/Usb.Media.Viewer-linux-x64-${VERSION}.zip"
+          mv out/make/zip/linux/x64/*.zip "renamed/Usb.Media.Viewer-linux-${VERSION}.zip"
 
       - uses: actions/upload-artifact@v4
         with:
