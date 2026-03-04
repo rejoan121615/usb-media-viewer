@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*.*.*'        # Trigger on version tags like v1.0.0
+      - 'v*.*.*'
     branches: [ build ]
 
 jobs:
@@ -20,10 +20,18 @@ jobs:
           node-version: 24
       - run: pnpm install
       - run: pnpm exec electron-forge make --platform=darwin --arch=x64
+
+      # Rename the artifact before uploading
+      - name: Rename macOS Intel artifact
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          mkdir -p renamed
+          mv out/make/zip/darwin/x64/*.zip "renamed/Usb.Media.Viewer-MacOs-Intel-Series-${VERSION}.zip"
+
       - uses: actions/upload-artifact@v4
         with:
           name: macos-intel-portable
-          path: out/make/zip/darwin/x64/**
+          path: renamed/*.zip
 
   build-macos-m1:
     runs-on: macos-latest
@@ -37,10 +45,18 @@ jobs:
           node-version: 24
       - run: pnpm install
       - run: pnpm exec electron-forge make --platform=darwin --arch=arm64
+
+      # Rename the artifact before uploading
+      - name: Rename macOS M1 artifact
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          mkdir -p renamed
+          mv out/make/zip/darwin/arm64/*.zip "renamed/Usb.Media.Viewer-MacOs-M-Series-${VERSION}.zip"
+
       - uses: actions/upload-artifact@v4
         with:
           name: macos-m1-portable
-          path: out/make/zip/darwin/arm64/**
+          path: renamed/*.zip
 
   build-windows:
     runs-on: windows-latest
@@ -54,10 +70,20 @@ jobs:
           node-version: 24
       - run: pnpm install
       - run: pnpm exec electron-forge make --platform=win32 --arch=x64
+
+      # Rename the artifact before uploading (PowerShell for Windows)
+      - name: Rename Windows artifact
+        shell: pwsh
+        run: |
+          $VERSION = node -p "require('./package.json').version"
+          New-Item -ItemType Directory -Force -Path renamed
+          $file = Get-ChildItem -Path "out/make/zip/win32/x64/*.zip" | Select-Object -First 1
+          Move-Item $file.FullName "renamed/Usb.Media.Viewer-win32-x64-$VERSION.zip"
+
       - uses: actions/upload-artifact@v4
         with:
           name: windows-portable
-          path: out/make/zip/win32/x64/**
+          path: renamed/*.zip
 
   build-linux:
     runs-on: ubuntu-latest
@@ -71,20 +97,27 @@ jobs:
           node-version: 24
       - run: pnpm install
       - run: pnpm exec electron-forge make --platform=linux --arch=x64
+
+      # Rename the artifact before uploading
+      - name: Rename Linux artifact
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          mkdir -p renamed
+          mv out/make/zip/linux/x64/*.zip "renamed/Usb.Media.Viewer-linux-x64-${VERSION}.zip"
+
       - uses: actions/upload-artifact@v4
         with:
           name: linux-portable
-          path: out/make/zip/linux/x64/**
+          path: renamed/*.zip
 
   release:
-    needs: [build-macos-intel, build-macos-m1, build-windows, build-linux]  # Runs only after ALL builds succeed
+    needs: [build-macos-intel, build-macos-m1, build-windows, build-linux]
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Required to create releases
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
-      # Download all artifacts from previous jobs
       - uses: actions/download-artifact@v4
         with:
           name: macos-intel-portable
@@ -105,12 +138,10 @@ jobs:
           name: linux-portable
           path: artifacts/linux
 
-      # Get version from package.json
       - name: Get version
         id: get_version
         run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      # Create GitHub Release and upload all artifacts
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -118,7 +149,7 @@ jobs:
           name: Release v${{ steps.get_version.outputs.VERSION }}
           draft: false
           prerelease: false
-          generate_release_notes: true   # Auto-generates changelog from commits
+          generate_release_notes: true
           files: |
             artifacts/macos-intel/**
             artifacts/macos-m1/**
