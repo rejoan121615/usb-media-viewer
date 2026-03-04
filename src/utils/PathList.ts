@@ -7,8 +7,10 @@ export const USBRootPath = (): string => {
       return path.join(process.execPath, "..", "..", "..","..","..");
     } else if (process.platform === "linux") {
       return path.join(process.execPath, "..", "..");
+    } else if (process.platform === "win32") {
+      return path.join(process.execPath, "..", "..");
     } else {
-      return path.join(process.execPath, "..", "..", "..","..", "..");
+      return process.cwd();
     }
   } else {
     return process.cwd();
