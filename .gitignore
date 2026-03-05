@@ -58,8 +58,6 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.test
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -94,3 +92,4 @@ out/
 
 # ignore sample media files 
 *.mp4
+config.bat

@@ -57,7 +57,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
     if (RootFilesAndFolders.length === 0) {
       return {
         success: false,
-        message: `current path: ${USBRootPath()}, is packed: ${app.isPackaged}, current platform: ${process.platform}`,
+        message: `no files and folders found in the video directory, current video path: ${videoFolderPath}`,
         data: null,
       };
     }
@@ -132,7 +132,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
   } catch (error) {
     return {
       success: false,
-      message: `current path: ${USBRootPath()}, is packed: ${app.isPackaged}, current platform: ${process.platform}`,
+      message: `something went wrong, error : ${error}, current USB path: ${USBRootPath()}, video folder path: ${videoFolderPath}`,
       data: null,
     };
   }

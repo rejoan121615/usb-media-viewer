@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-macos-intel:
-    runs-on: macos-latest   # ARM runner, but we force x64 native deps
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -20,7 +20,7 @@ jobs:
           node-version: 24
       - run: pnpm install
         env:
-          npm_config_arch: x64   # forces ffmpeg-static to download x64 binary
+          npm_config_arch: x64
       - run: pnpm exec electron-forge make --platform=darwin --arch=x64
 
       # Rename the artifact before uploading
