@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-macos-intel:
-    runs-on: macos-latest
+    runs-on: macos-13   # Intel (x64) runner — installs x64 ffmpeg
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: pnpm install
+      - run: pnpm install    # now installs x64 ffmpeg-static ✓
       - run: pnpm exec electron-forge make --platform=darwin --arch=x64
 
       # Rename the artifact before uploading
