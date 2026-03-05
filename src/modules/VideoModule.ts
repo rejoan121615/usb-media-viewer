@@ -57,7 +57,7 @@ export async function FetchVideoFiles(): Promise<ProtocolResType> {
     if (RootFilesAndFolders.length === 0) {
       return {
         success: false,
-        message: `No video files found in the directory, current path: ${USBRootPath()}`,
+        message: `current path: ${USBRootPath()}, is packed: ${app.isPackaged}, current platform: ${process.platform}`,
         data: null,
       };
     }
